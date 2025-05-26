@@ -69,9 +69,6 @@ Created by J.D., MGIS — a U.S. Air Force analyst, Academy Instructor, and mili
 
 ---
 
-## 📬 Feedback
-
----
 
 ## 📝 License & Attribution
 
