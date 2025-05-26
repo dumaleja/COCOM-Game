@@ -65,11 +65,22 @@ No installation needed! Simply:
 
 ## 👩‍💻 Author
 
-Created by Jared — a U.S. Air Force geospatial analyst, teacher, and military education innovator passionate about making learning interactive and fun!
+Created by J.D., MGIS — a U.S. Air Force analyst, Academy Instructor, and military education innovator passionate about making learning interactive and fun!
 
 ---
 
 ## 📬 Feedback
+
+---
+
+## 📝 License & Attribution
+
+This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
+
+SVG World Map © [amCharts](https://www.amcharts.com/svg-maps/), used under an open license.
+
+Original code, layout, and COCOM organization © 2025 **HangarQueen, LLC**. Educational use encouraged!
+
 
 Spotted a bug? Want to help improve it? Reach out or fork this project and make it your own!
 
