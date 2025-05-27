@@ -1,4 +1,4 @@
-const countries = new Set([
+    const countries = new Set([
       "Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua and Barbuda", "Antarctica", "Argentina", "Armenia",
       "Australia", "Austria", "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium",
       "Belize", "Benin", "Bhutan", "Bolivia", "Bosnia and Herzegovina", "Botswana", "Brazil", "Brunei", "Bulgaria",
@@ -85,10 +85,8 @@ window.addEventListener("DOMContentLoaded", () => {
 });
 
     const nameAliases = {
-    "america": "United States of America",
     "antigua": "Antigua and Barbuda",
     "bosnia": "Bosnia and Herzegovina",
-    "burkina": "Burkina Faso",
     "burma": "Myanmar",
     "cabo verde": "Cape Verde",
     "car": "Central African Republic",
@@ -144,14 +142,15 @@ window.addEventListener("DOMContentLoaded", () => {
     "uae": "United Arab Emirates",
     "the emirates": "United Arab Emirates",
     "uk": "United Kingdom",
+    "u.k.": "United Kingdom",
     "the uk" : "United Kingdom",
+    "the u.k." : "United Kingdom",
     "u.s.": "United States of America",
     "u.s.a.": "United States of America",
     "united states": "United States of America",
     "united states of america": "United States of America",
     "us": "United States of America",
     "usa": "United States of America",
-    "usofa": "United States of America",
     "vatican": "Vatican City",
     "viet nam": "Vietnam",
 
@@ -237,6 +236,13 @@ function updateScore() {
     clearInterval(countdown); // ✅ stop timer
     showVictoryModal();       // ✅ trigger modal
   }
+}
+
+function formatElapsedTime(ms) {
+  const totalSeconds = Math.floor(ms / 1000);
+  const minutes = Math.floor(totalSeconds / 60).toString().padStart(2, "0");
+  const seconds = (totalSeconds % 60).toString().padStart(2, "0");
+  return `${minutes}:${seconds}`;
 }
 
 
@@ -410,7 +416,16 @@ document.getElementById("restartButton").addEventListener("click", () => {
 
 //Mr. Miyagi Win!//
 function showVictoryModal() {
-  document.getElementById("victoryModal").style.display = "block";
+const elapsedSeconds = 900 - timeRemaining;
+const minutes = Math.floor(elapsedSeconds / 60);
+const seconds = elapsedSeconds % 60;
+
+document.getElementById("completionTimeText").innerHTML = 
+  `You completed it in <strong>${minutes}:${seconds.toString().padStart(2, '0')}</strong>.`;
+
+document.getElementById("victoryModal").style.display = "block";
+
+const modal = document.getElementById("victoryModal").style.display = "block"; // or whatever your modal ID is
 }
 
 function closeVictoryModal() {
@@ -436,6 +451,14 @@ function closeGiveUpModal() {
 function closevictoryModal() {
   document.getElementById("victoryModal").style.display = "none";
 }
+
+function formatElapsedTime(ms) {
+  const totalSeconds = Math.floor(ms / 1000);
+  const minutes = Math.floor(totalSeconds / 60).toString().padStart(2, "0");
+  const seconds = (totalSeconds % 60).toString().padStart(2, "0");
+  return `${minutes}:${seconds}`;
+}
+
 
 document.getElementById("giveUpButton").addEventListener("click", () => {
   if (!gameStarted) return; // Prevent giving up if game hasn't started
