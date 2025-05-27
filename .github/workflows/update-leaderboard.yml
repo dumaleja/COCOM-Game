@@ -1,0 +1,47 @@
+name: Update Leaderboard
+
+on:
+  repository_dispatch:
+    types: [update-leaderboard]
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v3
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+
+    - name: Read input from payload
+      run: |
+        echo '${{ toJson(github.event.client_payload) }}' > payload.json
+
+    - name: Update leaderboard if time is better
+      run: |
+        node <<EOF
+        const fs = require('fs');
+        const newData = JSON.parse(fs.readFileSync('payload.json', 'utf8'));
+        const leaderboardPath = 'leaderboard.json';
+        const current = JSON.parse(fs.readFileSync(leaderboardPath, 'utf8'));
+
+        if (newData.time < current.time) {
+          fs.writeFileSync(leaderboardPath, JSON.stringify(newData, null, 2));
+          console.log("✅ Leaderboard updated.");
+        } else {
+          console.log("❌ Not a faster time.");
+        }
+        EOF
+
+    - name: Commit and push if updated
+      run: |
+        git config --global user.name 'github-actions'
+        git config --global user.email 'github-actions@github.com'
+        git add leaderboard.json
+        git commit -m "Update leaderboard" || echo "No update needed"
+        git push
+      env:
+        GH_TOKEN: ${{ secrets.GH_TOKEN }}
