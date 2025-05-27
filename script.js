@@ -248,7 +248,7 @@ function formatElapsedTime(ms) {
 
 if (found.size === countries.size) {
   clearInterval(countdown);           // 🛑 Stop the timer
-  showVictoryMessage(); // 🎉 show the gif and message
+  showVictoryModal(); // 🎉 show the gif and message
   }
 
 function endGame() {
@@ -466,3 +466,16 @@ document.getElementById("giveUpButton").addEventListener("click", () => {
   showGiveUpModal();
   clearInterval(countdown);
 });
+
+function simulateWin() {
+  if (!gameStarted) {
+    gameStarted = true;
+    timeRemaining = 900;
+    startTimer();
+  }
+
+  // Simulate full completion
+  countries.forEach(c => found.add(c)); // If you want the map filled
+  updateScore(); // this will call showVictoryModal()
+}
+</script>
