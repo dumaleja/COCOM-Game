@@ -1,11 +1,181 @@
-<!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
 <title>World Countries Map Quiz</title>
+<style>
+  body {
+  background: radial-gradient(
+    circle at top left,
+    #ffffff,  /* light color */
+    #5b85c4,
+    #002d6c  /* darker color */
+  );
+}
+    body { font-family: Arial, sans-serif; text-align: center; }
+    .found { fill: rgb(52, 103, 52) !important; }
+    input { padding: 10px; width: 300px; font-size: 16px; }
+    #score { margin-top: 10px; }
+  
+#statusBar {
+  display: flex;
+  justify-content: space-between;  /* spreads them out */
+  align-items: baseline;           /* aligns numbers/text to text baseline */
+  font-size: 1rem;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  gap: 20px;
+}
 
-<link href="style.css" rel="stylesheet"/></head>
+#buttonRow {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  gap: 10px;
+}
+
+.country-grid {
+  flex: shrink;
+  overflow: visible;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  align-content: start;
+}
+
+@keyframes flashYellow {
+  0%, 100% { fill: #ffee00;}
+}
+
+.flash-missed {
+  animation: flashYellow 1s ease-in-out 3;
+}
+
+
+.country-grid .country {
+  display: inline-block;
+  width: FLEX;
+  border: 1px solid #ccc;
+  padding: 2px 4px;
+  text-align: center;
+  font-size: 9px;
+  background-color: #f2f2f2;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  min-height: 8px;
+  box-sizing: content-box;
+}
+
+#beginButton {
+  margin-top: 10px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  background-color: #07d300;
+  color: white;
+  border: ;
+  border-radius: 4px;
+}
+
+#beginButton:hover {
+    background-color: #079502;
+}
+
+#giveUpButton {
+  margin-top: 10px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  background-color: #ff1900;
+  color: white;
+  border: ;
+  border-radius: 4px;
+}
+
+#giveUpButton:hover {
+  background-color: #cc1400;
+}
+#whatamimissingButton {
+  margin-top: 10px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  background-color: #ffee00;
+  color: rgb(0, 0, 0);
+  border: ;
+  border-radius: 4px;
+}
+
+#whatamimissingButton:hover {
+  background-color: #e0d100;
+}
+
+#restartButton {
+  margin-top: 10px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  background-color: #0099ff;
+  color: white;
+  border: ;
+  border-radius: 4px;
+  margin-left: 0px;
+  
+}
+
+#restartButton:hover {
+  background-color: #007fd3;
+}
+
+.country-grid .country.found {
+  background-color: rgb(81, 221, 81);
+  text-align: center;
+  vertical-align: middle;
+  font-weight: bold;
+  border-color: #216324;
+}
+
+#mainContainer {
+  height: flex;
+  display: flex;
+  gap: 20px;
+}
+
+#mapContainer svg {
+  width: auto;
+  height: auto;
+  display: flex;
+  border: 2px solid #000000;
+  border-radius: px;
+  background-color: #549aad;
+}
+
+#mapContainer.grayed svg {
+  opacity: 0.3;
+  pointer-events: none;
+  filter: grayscale(100%);
+}
+
+#instructions {
+  width:auto;
+  height: auto;
+  border: 2px 2px solid #000000;
+  border-radius: 8px;
+}
+
+#tableContainer {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: visible; /* prevent scrollbars */
+}
+
+</style>
+</head>
 <body>
 <div id="mainContainer">
 <div id="mapContainer">
@@ -2826,18 +2996,22 @@
   font-size: 12px;
   box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 ">
-<h2 style="text-align: left; margin-bottom: 12px;">Instructions</h2>
-<ul style="text-align: left; line-height: 1.6; padding-left: 20px;">
-<li>You have 15 minutes to name as many countries as you can!</li>
-<li>Press <strong>Enter</strong> after each guess.</li>
-<li>Click <strong>“I Give Up”</strong> to end early and reveal missed countries.</li>
-</ul>
-<h2 style="text-align: left; margin-bottom: 12px;">Notes</h2>
-<ul style="text-align: left; line-height: 1.6; padding-left: 20px;">
-<li>Common abbreviations and initialisms are accepted (e.g., US/USA/U.S., St./Saint, etc...).</li>
-<li>Spelling counts! Misspelled countries won’t be accepted.</li>
-<li>This game includes all 193 United Nations member states, plus 6 widely recognized or politically significant entities.</li>
-</ul>
+
+  <h2 style="text-align: left; margin-bottom: 12px;">Instructions</h2>
+
+  <ul style="text-align: left; line-height: 1.6; padding-left: 20px;">
+    <li>You have 15 minutes to name as many countries as you can!</li>
+    <li>Press <strong>Enter</strong> after each guess.</li>
+    <li>Click <strong>“I Give Up”</strong> to end early and reveal missed countries.</li>
+  </ul>
+
+  <h2 style="text-align: left; margin-bottom: 12px;">Notes</h2>
+  <ul style="text-align: left; line-height: 1.6; padding-left: 20px;">
+    <li>Common abbreviations and initialisms are accepted (e.g., US/USA/U.S., St./Saint, etc...).</li>
+    <li>Spelling counts! Misspelled countries won’t be accepted.</li>
+    <li>This game includes all 193 United Nations member states, plus 6 widely recognized or politically significant entities.</li>
+  </ul>
+
 </div>
 </div>
 <div id="tableContainer">
@@ -2882,10 +3056,12 @@
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
   text-align:center ;
 ">
-<h2>🎉 You did it! 🎉</h2>
-<img alt="Victory Celebration" src="https://media1.tenor.com/m/Lpp5fg42OywAAAAC/nod-yes.gif" style="max-width: 100%; border-radius: 10px;"/>
-<br/><br/>
-<button onclick="location.reload()" style="
+  <h2>🎉 You did it! 🎉</h2>
+  <img src="https://media1.tenor.com/m/Lpp5fg42OywAAAAC/nod-yes.gif" alt="Victory Celebration" style="max-width: 100%; border-radius: 10px;" />
+  <br><br>
+  <p id="completionTimeText" style="font-size: 18px; margin: 12px 0; font-weight: bold;"></p>
+  <br><br>
+  <button onclick="location.reload()" style="
     padding: 8px 16px;
     font-size: 14px;
     font-weight: bold;
@@ -2896,7 +3072,7 @@
     cursor: pointer;
 
   ">Go Again!</button>
-<button onclick="closevictoryModal()" style="
+    <button onclick="closevictoryModal()" style="
     padding: 8px 16px;
     font-size: 14px;
     font-weight: bold;
@@ -2906,6 +3082,7 @@
     cursor: pointer;
   ">Review Your Answers</button>
 </div>
+
 <!-- Timeout Modal -->
 <div id="timeoutModal" style="
   display: none;
@@ -2921,11 +3098,11 @@
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
   text-align: center;
 ">
-<h2>⏰ Time's Up!</h2>
-<p style="font-size: 1.1rem;">You didn't find them all — but you can always try again!</p>
-<img alt="Time Out" src="https://media1.tenor.com/m/5-H9j1Sb57oAAAAC/no-bad.gif" style="max-width: 100%; border-radius: 10px;"/>
-<br/><br/>
-<button onclick="closeTimeoutModal()" style="
+  <h2>⏰ Time's Up!</h2>
+  <p style="font-size: 1.1rem;">You didn't find them all — but you can always try again!</p>
+  <img src="https://media1.tenor.com/m/5-H9j1Sb57oAAAAC/no-bad.gif" alt="Time Out" style="max-width: 100%; border-radius: 10px;" />
+  <br><br>
+  <button onclick="closeTimeoutModal()" style="
     padding: 8px 16px;
     font-size: 14px;
     font-weight: bold;
@@ -2935,6 +3112,7 @@
     cursor: pointer;
   ">Review Your Answers</button>
 </div>
+
 <!-- Give Up Modal -->
 <div id="giveUpModal" style="
   display: none;
@@ -2950,11 +3128,11 @@
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
   text-align: center;
 ">
-<h2>You Gave Up?!</h2>
-<p style="font-size: 1.1rem;">Take a look at what you missed — better luck next time!</p>
-<img alt="Gave Up" src="https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExbWIzbHcwaGtvaWt4anUxcDBwNjI4N2E3ZnZ6NjV2d3ppdTMxcm5pbSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/1ryrwFNXqNjC8/giphy.gif" style="max-width: 100%; border-radius: 10px;"/>
-<br/><br/>
-<button onclick="closeGiveUpModal()" style="
+  <h2>You Gave Up?!</h2>
+  <p style="font-size: 1.1rem;">Take a look at what you missed — better luck next time!</p>
+  <img src="https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExbWIzbHcwaGtvaWt4anUxcDBwNjI4N2E3ZnZ6NjV2d3ppdTMxcm5pbSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/1ryrwFNXqNjC8/giphy.gif" alt="Gave Up" style="max-width: 100%; border-radius: 10px;" />
+  <br><br>
+  <button onclick="closeGiveUpModal()" style="
     padding: 8px 16px;
     font-size: 14px;
     font-weight: bold;
@@ -2964,9 +3142,8 @@
     cursor: pointer;
   ">Review Your Answers</button>
 </div>
-<script src="script.js"></script>
-<footer style="text-align:center; font-size:0.9em; margin-top:2rem;">
-  © 2025 HangarQueen, LLC | Built for educational use | Map © <a href="https://www.amcharts.com/svg-maps/" target="_blank">amCharts</a>
-</footer>
+<!--<button onclick="simulateWin()" style="margin-top: 20px; padding: 8px 16px; font-size: 14px;">
+  🧪 Simulate Win --->
+</button>
 </body>
 </html>
