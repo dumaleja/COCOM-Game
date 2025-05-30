@@ -15,11 +15,7 @@ This is a web-based trivia game designed to help players learn and memorize coun
 
 ## 📁 What's Included
 
-- **HTML** for structure
-- **CSS** (inline and style blocks) for design and layout
-- **JavaScript** for gameplay logic, dynamic updates, and event handling
-
-Everything is contained in a single `.html` file—just open it in any modern web browser.
+Everything is contained in a single `index.html` file—just open it in any modern web browser.
 
 ---
 
