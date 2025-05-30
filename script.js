@@ -1,6 +1,4 @@
-
-  
-    const countries = new Set([
+     const countries = new Set([
       "Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua and Barbuda", "Antarctica", "Argentina", "Armenia",
       "Australia", "Austria", "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium",
       "Belize", "Benin", "Bhutan", "Bolivia", "Bosnia and Herzegovina", "Botswana", "Brazil", "Brunei", "Bulgaria",
@@ -21,7 +19,7 @@
       "Samoa", "San Marino", "São Tomé and Príncipe", "Saudi Arabia", "Senegal", "Serbia", "Seychelles", "Sierra Leone",
       "Singapore", "Slovakia", "Slovenia", "Solomon Islands", "Somalia", "South Africa", "South Sudan", "Spain",
       "Sri Lanka", "Sudan", "Suriname", "Sweden", "Switzerland", "Syria", "Taiwan", "Tajikistan", "Tanzania",
-      "Thailand", "Togo", "Tonga", "Trinidad and Tobago", "Tunisia", "Turkey", "Turkmenistan", "Tuvalu", "Uganda",
+      "Thailand", "Togo", "Tonga", "Trinidad and Tobago", "Tunisia", "Türkiye", "Turkmenistan", "Tuvalu", "Uganda",
       "Ukraine", "United Arab Emirates", "United Kingdom", "United States of America", "Uruguay", "Uzbekistan", "Vanuatu",
       "Vatican City", "Venezuela", "Vietnam", "Western Sahara","Yemen", "Zambia", "Zimbabwe"
     ]);
@@ -43,7 +41,7 @@
     "Bulgaria", "Croatia", "Cyprus", "Czechia", "Denmark", "Estonia", "Finland", "France", "Georgia", "Germany",
     "Greece", "Hungary", "Iceland", "Ireland", "Italy", "Kosovo", "Latvia", "Liechtenstein", "Lithuania", "Luxembourg",
     "Malta", "Moldova", "Monaco", "Montenegro", "Netherlands", "North Macedonia", "Norway", "Poland", "Portugal",
-    "Romania", "Russia", "San Marino", "Serbia", "Slovakia", "Slovenia", "Spain", "Sweden", "Switzerland", "Turkey",
+    "Romania", "Russia", "San Marino", "Serbia", "Slovakia", "Slovenia", "Spain", "Sweden", "Switzerland", "Türkiye",
     "Ukraine", "United Kingdom", "Vatican City"
   ]),
 
@@ -140,7 +138,8 @@ window.addEventListener("DOMContentLoaded", () => {
     "timor-leste": "East Timor",
     "trinidad": "Trinidad and Tobago",
     "trinidad & tobago": "Trinidad and Tobago",
-    "turkiye": "Turkey",
+    "turkiye": "Türkiye",
+    "turkey": "Türkiye",
     "uae": "United Arab Emirates",
     "the emirates": "United Arab Emirates",
     "uk": "United Kingdom",
@@ -185,11 +184,11 @@ const gccGuessedCountries = {
 function highlightCountryByDataCountry(inputName) {
   const normalized = inputName.trim().toLowerCase();
 
-  // Search for all elements with a data-country attribute
-  const elements = document.querySelectorAll("[data-country]");
+  // Search for all elements with a country-data attribute
+  const elements = document.querySelectorAll("[country-data]");
 
   elements.forEach(el => {
-    const countryName = el.getAttribute("data-country").trim().toLowerCase();
+    const countryName = el.getAttribute("country-data").trim().toLowerCase();
 
     if (countryName === normalized) {
       // If it's a group, highlight its children
@@ -288,6 +287,7 @@ input.addEventListener("keyup", function (e) {
       if (!found.has(countryName)) {
         const box = container.querySelector(`.country[data-country="${countryName}"]`);
 
+
         if (box) {
           box.textContent = countryName;
           box.style.backgroundColor = "red";
@@ -297,14 +297,14 @@ input.addEventListener("keyup", function (e) {
         }
 
         // Also color the SVG element (if it exists)
-        const svgEl = document.querySelector(`[data-country="${countryName}"]`);
+        const svgEl = document.querySelector(`[country-data="${countryName}"]`);
         if (svgEl) {
           if (svgEl.tagName.toLowerCase() === "g") {
             svgEl.querySelectorAll("path, circle").forEach(child => {
-              child.style.fill = "red";
+              child.style.fill = "rgba(255, 0, 0, 0.5)";
             });
           } else {
-            svgEl.style.fill = "red";
+            svgEl.style.fill = "rgba(255, 0, 0, 0.5)";
           }
         }
       }
@@ -346,11 +346,11 @@ function updateTimerDisplay() {
 document.getElementById("whatamimissingButton").addEventListener("click", () => {
   const remainingCountries = Array.from(document.querySelectorAll(".country"))
     .filter(div => !div.classList.contains("found"))
-    .map(div => div.dataset.country?.toLowerCase());
+    .map(div => div.getAttribute('country-data')?.toLowerCase());
 
   // ONLY look inside the <svg> to avoid grid boxes
   const svg = document.querySelector("svg");
-  const svgElements = svg.querySelectorAll("g[data-country], path[data-country], circle[data-country]");
+  const svgElements = svg.querySelectorAll("g[country-data], path[country-data], circle[country-data]");
 
   svgElements.forEach(el => {
     const countryName = el.dataset.country?.toLowerCase();
