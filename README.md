@@ -36,14 +36,13 @@ Each has its own grid that populates as correct country names are entered.
 
 No installation needed! Simply:
 1. Download or clone this repository
-2. Open the `COCOM Trivia FINAL.html` file in your browser
+2. Open the `index.html` file in your browser
 3. Start guessing!
 
 ---
 
 ## 🛠️ Future Improvements
 
-- Split code into separate HTML/CSS/JS files for maintainability
 - Add difficulty modes (timed vs untimed, hints, etc.)
 - Mobile/touchscreen optimizations
 - Score tracking and high scores
