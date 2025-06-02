@@ -15,7 +15,13 @@ This is a web-based trivia game designed to help players learn and memorize coun
 
 ## 📁 What's Included
 
-Everything is contained in a single `index.html` file—just open it in any modern web browser.
+This version includes:
+
+index.html: Main game interface and layout
+
+style.css: Stylesheet for colors, layout, and responsive design
+
+script.js: JavaScript logic for interactivity and scoring
 
 ---
 
