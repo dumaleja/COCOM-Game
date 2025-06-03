@@ -209,7 +209,7 @@
         fill-rule: evenodd;
       }
 
-      .st6,, .st8, .st9, .st10, .st11, .st12, .st13, .st14, .st15 {
+      .st6, .st8, .st9, .st10, .st11, .st12, .st13, .st14, .st15 {
         stroke: #1f1a17;
       }
 
@@ -251,7 +251,7 @@
         stroke-width: .25px;
       }
 
-      , .st8, .st15 {
+      .st8, .st15 {
         stroke-width: .25px;
       }
     
