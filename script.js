@@ -419,7 +419,7 @@ document.getElementById("restartButton").addEventListener("click", () => {
 
 //Mr. Miyagi Win!//
 function showVictoryModal() {
-const elapsedSeconds = 900 - timeRemaining;
+const elapsedSeconds = 600 - timeRemaining;
 const minutes = Math.floor(elapsedSeconds / 60);
 const seconds = elapsedSeconds % 60;
 
