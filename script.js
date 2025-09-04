@@ -162,7 +162,7 @@ window.addEventListener("DOMContentLoaded", () => {
   document.getElementById("mapContainer").classList.add("grayed");
   document.getElementById("countryInput").disabled = true;
   document.getElementById("countryInput").placeholder = "Click 'Begin' to start";
-  document.getElementById("timeLeft").textContent = "15:00";
+  document.getElementById("timeLeft").textContent = "10:00";
 });
 
 
@@ -473,7 +473,7 @@ document.getElementById("giveUpButton").addEventListener("click", () => {
 function simulateWin() {
   if (!gameStarted) {
     gameStarted = true;
-    timeRemaining = 900;
+    timeRemaining = 600;
     startTimer();
   }
 
