@@ -1,4 +1,4 @@
-
+<script>
      const countries = new Set([
       "Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua and Barbuda", "Antarctica", "Argentina", "Armenia",
       "Australia", "Austria", "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium",
@@ -481,3 +481,4 @@ function simulateWin() {
   countries.forEach(c => found.add(c)); // If you want the map filled
   updateScore(); // this will call showVictoryModal()
 }
+</script>
