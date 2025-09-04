@@ -390,7 +390,7 @@ beginButton.addEventListener("click", () => {
   input.placeholder = "Type country name here";
 
 // Start timer
-  timeRemaining = 900;
+  timeRemaining = 600;
   const minutes = Math.floor(timeRemaining / 60);
 const seconds = timeRemaining % 60;
     document.getElementById("timeLeft").textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;  countdown = setInterval(() => {
