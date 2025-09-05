@@ -9,7 +9,7 @@ This is a web-based trivia game designed to help players learn and memorize coun
 1. Start the game by clicking the **"BEGIN"** button.
 2. Type in the name of any country you think belongs to one of the Combatant Commands.
 3. Correct guesses will appear in their respective regional columns below the map.
-4. The timer counts down from 15 minutes—try to name them all before time runs out!
+4. The timer counts down from 10 minutes—try to name them all before time runs out!
 
 ---
 
@@ -18,10 +18,6 @@ This is a web-based trivia game designed to help players learn and memorize coun
 This version includes:
 
 index.html: Main game interface and layout
-
-style.css: Stylesheet for colors, layout, and responsive design
-
-script.js: JavaScript logic for interactivity and scoring
 
 ---
 
