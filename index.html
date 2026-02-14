@@ -3297,8 +3297,10 @@ input.addEventListener("keyup", function (e) {
 // 4. Timer logic
 let countdown; // declared globally to access in restart/giveUp
 let timeRemaining; // declared globally for timer tracking
+let endTime; // wall-clock anchor for accurate countdown
 
 function updateTimerDisplay() {
+  timeRemaining = Math.max(0, Math.ceil((endTime - Date.now()) / 1000));
   const minutes = Math.floor(timeRemaining / 60);
   const seconds = timeRemaining % 60;
   document.getElementById("timeLeft").textContent =
