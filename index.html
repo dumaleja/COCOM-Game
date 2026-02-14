@@ -56,7 +56,7 @@
 
 .country-grid .country {
   display: inline-block;
-  width: FLEX;
+  width: auto;
   border: 1px solid #ccc;
   padding: 2px 4px;
   text-align: center;
@@ -138,7 +138,7 @@
 }
 
 #mainContainer {
-  height: flex;
+  height: auto;
   display: flex;
   gap: 20px;
 }
@@ -148,7 +148,7 @@
   height: auto;
   display: flex;
   border: 2px solid #000000;
-  border-radius: px;
+  border-radius: 8px;
   background-color: #549aad;
 }
 
@@ -161,7 +161,7 @@
 #instructions {
   width:auto;
   height: auto;
-  border: 2px 2px solid #000000;
+  border: 2px solid #000000;
   border-radius: 8px;
 }
 
@@ -3007,8 +3007,6 @@
 <!--- <button onclick="simulateWin()" style="margin-top: 20px; padding: 8px 16px; font-size: 14px;">
   🧪 Simulate Win
 </button> --->
-</body>
-</html>
 <script>
      const countries = new Set([
       "Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua and Barbuda", "Antarctica", "Argentina", "Armenia",
@@ -3182,15 +3180,6 @@ const found = new Set();
 const input = document.getElementById("countryInput");
 const scoreDisplay = document.getElementById("score");
    
-const gccGuessedCountries = {
-  northcom: [],
-  southcom: [],
-  eucom: [],
-  africom: [],
-  centcom: [],
-  indopacom: []
-};
-
   // 2. Define functions (in any order after variables are declared)
 
 function highlightCountryByDataCountry(inputName) {
@@ -3233,15 +3222,6 @@ function updateCommandList(countryName) {
   }
 }
 
-giveUpButton.addEventListener("click", () => {
-  if (!gameStarted) return;
-  
-  clearInterval(countdown);  // Stop the timer
-
-  endGame();                 // Reveal all missed countries
-  showGiveUpModal(); // display the give up modal
-});
-
 function updateScore() {
   scoreDisplay.textContent = `${found.size} / ${countries.size} countries`;
 
@@ -3250,19 +3230,6 @@ function updateScore() {
     showVictoryModal();       // ✅ trigger modal
   }
 }
-
-function formatElapsedTime(ms) {
-  const totalSeconds = Math.floor(ms / 1000);
-  const minutes = Math.floor(totalSeconds / 60).toString().padStart(2, "0");
-  const seconds = (totalSeconds % 60).toString().padStart(2, "0");
-  return `${minutes}:${seconds}`;
-}
-
-
-if (found.size === countries.size) {
-  clearInterval(countdown);           // 🛑 Stop the timer
-  showVictoryModal(); // 🎉 show the gif and message
-  }
 
 function endGame() {
   revealMissedCountries();
@@ -3285,9 +3252,8 @@ input.addEventListener("keyup", function (e) {
           updateScore();
           break;
         }
-        input.value = ""; //clears box if right//
       }
-      input.value = ""; //clears box if wrong//
+      input.value = "";
     }
   });
   
@@ -3330,23 +3296,7 @@ input.addEventListener("keyup", function (e) {
 
 // 4. Timer logic
 let countdown; // declared globally to access in restart/giveUp
-
-function startTimer() {
-  const timerDisplay = document.getElementById("timeLeft");
- 
-  countdown = setInterval(() => {
-  timeRemaining--;
-
-  const minutes = Math.floor(timeRemaining / 60);
-  const seconds = timeRemaining % 60;
-  document.getElementById("timeLeft").textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-
-  if (timeRemaining <= 0 || found.size === countries.size) {
-  clearInterval(countdown);
-  endGame();
-}
-}, 1000);
-}
+let timeRemaining; // declared globally for timer tracking
 
 function updateTimerDisplay() {
   const minutes = Math.floor(timeRemaining / 60);
@@ -3358,14 +3308,14 @@ function updateTimerDisplay() {
 document.getElementById("whatamimissingButton").addEventListener("click", () => {
   const remainingCountries = Array.from(document.querySelectorAll(".country"))
     .filter(div => !div.classList.contains("found"))
-    .map(div => div.getAttribute('country-data')?.toLowerCase());
+    .map(div => div.dataset.country?.toLowerCase());
 
   // ONLY look inside the <svg> to avoid grid boxes
   const svg = document.querySelector("svg");
   const svgElements = svg.querySelectorAll("g[country-data], path[country-data], circle[country-data]");
 
   svgElements.forEach(el => {
-    const countryName = el.dataset.country?.toLowerCase();
+    const countryName = el.getAttribute("country-data")?.trim().toLowerCase();
     if (remainingCountries.includes(countryName)) {
       if (el.tagName.toLowerCase() === "g") {
         el.querySelectorAll("path, circle").forEach(child => {
@@ -3384,7 +3334,6 @@ document.getElementById("whatamimissingButton").addEventListener("click", () => 
 });
 
 let gameStarted = false;
-let timerInterval;
 
 //Begin Button//
 
@@ -3416,13 +3365,6 @@ const seconds = timeRemaining % 60;
 });
 
 
-window.addEventListener("DOMContentLoaded", () => {
-  document.getElementById("mapContainer").classList.add("grayed");
-  document.getElementById("countryInput").disabled = true;
-  document.getElementById("countryInput").placeholder = "Click 'Begin' to start";
-});
-
-
  // RESTART BUTTON REFRESHES WHOLE PAGE //
 document.getElementById("restartButton").addEventListener("click", () => {
   location.reload(); // refreshes the page and resets everything
@@ -3438,12 +3380,6 @@ document.getElementById("completionTimeText").innerHTML =
   `You completed it in <strong>${minutes}:${seconds.toString().padStart(2, '0')}</strong>.`;
 
 document.getElementById("victoryModal").style.display = "block";
-
-const modal = document.getElementById("victoryModal").style.display = "block"; // or whatever your modal ID is
-}
-
-function closeVictoryModal() {
-  document.getElementById("victoryModal").style.display = "none";
 }
 
 function showTimeoutModal() {
@@ -3466,30 +3402,12 @@ function closevictoryModal() {
   document.getElementById("victoryModal").style.display = "none";
 }
 
-function formatElapsedTime(ms) {
-  const totalSeconds = Math.floor(ms / 1000);
-  const minutes = Math.floor(totalSeconds / 60).toString().padStart(2, "0");
-  const seconds = (totalSeconds % 60).toString().padStart(2, "0");
-  return `${minutes}:${seconds}`;
-}
-
-
 document.getElementById("giveUpButton").addEventListener("click", () => {
   if (!gameStarted) return; // Prevent giving up if game hasn't started
   revealMissedCountries();
   showGiveUpModal();
   clearInterval(countdown);
 });
-
-function simulateWin() {
-  if (!gameStarted) {
-    gameStarted = true;
-    timeRemaining = 600;
-    startTimer();
-  }
-
-  // Simulate full completion
-  countries.forEach(c => found.add(c)); // If you want the map filled
-  updateScore(); // this will call showVictoryModal()
-}
 </script>
+</body>
+</html>
