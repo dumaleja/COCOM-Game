@@ -297,17 +297,17 @@ input.addEventListener("keyup", function (e) {
           box.classList.add("missed");
         }
 
-        // Also color the SVG element (if it exists)
-        const svgEl = document.querySelector(`[country-data="${countryName}"]`);
-        if (svgEl) {
+        // Also color ALL matching SVG elements (some countries have duplicate SVG groups)
+        const svgEls = document.querySelectorAll(`[country-data="${countryName}"]`);
+        svgEls.forEach(svgEl => {
           if (svgEl.tagName.toLowerCase() === "g") {
-            svgEl.querySelectorAll("path, circle").forEach(child => {
+            svgEl.querySelectorAll("path, circle, rect, ellipse, polygon, use").forEach(child => {
               child.style.fill = "rgba(255, 0, 0, 0.5)";
             });
           } else {
             svgEl.style.fill = "rgba(255, 0, 0, 0.5)";
           }
-        }
+        });
       }
     });
   }
@@ -463,12 +463,6 @@ function formatElapsedTime(ms) {
 }
 
 
-document.getElementById("giveUpButton").addEventListener("click", () => {
-  if (!gameStarted) return; // Prevent giving up if game hasn't started
-  revealMissedCountries();
-  showGiveUpModal();
-  clearInterval(countdown);
-});
 
 function simulateWin() {
   if (!gameStarted) {
