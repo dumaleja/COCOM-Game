@@ -8,12 +8,13 @@
   body {
   background: radial-gradient(
     circle at top left,
-    #ffffff,  /* light color */
+    #ffffff,
     #5b85c4,
-    #002d6c  /* darker color */
+    #002d6c
   );
+  font-family: Arial, sans-serif;
+  text-align: center;
 }
-    body { font-family: Arial, sans-serif; text-align: center; }
     .found { fill: rgba(3, 179, 3, 0.5) !important; }
     input { padding: 10px; width: 300px; font-size: 16px; }
     #score { margin-top: 10px; }
@@ -38,7 +39,7 @@
 }
 
 .country-grid {
-  flex: shrink;
+  flex-shrink: 1;
   overflow: visible;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
@@ -46,7 +47,8 @@
 }
 
 @keyframes flashYellow {
-  0%, 100% { fill: hsla(63, 100%, 65%, 0.675);}
+  0%, 100% { fill: hsla(63, 100%, 65%, 0); }
+  50% { fill: hsla(63, 100%, 65%, 0.675); }
 }
 
 .flash-missed {
@@ -57,7 +59,6 @@
 .country-grid .country {
   display: inline-block;
   width: auto;
-  border: 1px solid #ccc;
   padding: 2px 4px;
   text-align: center;
   font-size: 9px;
@@ -121,8 +122,6 @@
   background-color: #0099ff;
   color: white;
   border-radius: 4px;
-  margin-left: 0px;
-  
 }
 
 #restartButton:hover {
@@ -2409,7 +2408,7 @@
     <path id="path5440" class="st15" d="M661.34,182.83c.06.12-.67,1.33.23,1.24.78-.08-.01-.97-.23-1.24" inkscape:connector-curvature="0"/>
     <path id="path5486" class="st6" d="M656.88,185.81c1.27-.46.68-3.03,2-3.27.51-.09,1.24-.14,1.91.41.17.14.62,1.07.44,1.29-.38-.53-.91.37-1.11.63.58-.08,1.22.15,1.36.77.17.76.75,1.43,1.01,2.2-.49-.28-1.71.19-2.19-.14-.37-.26-.42-.83-.57-1.22-.2-.53-2.09-.38-2.85-.67" inkscape:connector-curvature="0"/>
   </g>
-  <g  country-data= "East Timor "id="tl">
+  <g country-data="East Timor" id="tl">
     <path id="path2786" class="st6" d="M896.68,316.73c.02,1.07.27.62.92.22.63-.38,1.59-.61,2.29-.88,1.12-.43,2.73-.85,3.51-1.86.45-.58-.76-.46-1.02-.39-.7.21-1.32.3-2.04.42-.77.13-1.49.12-2.28.29-.3.06-.7.03-.95.23-.27.21-.42.72-.69.93.66.32.6.5.27,1.03h0Z" inkscape:connector-curvature="0"/>
     <path id="path2788" class="st6" d="M893.14,317.41c.53-.39.92-.57,1.57-.69-.14.06-.02,1.29-.33,1.21-.24-.06-.29-.31-.34-.23-.24.34-.66-.38-.89-.29" inkscape:connector-curvature="0"/>
   </g>
@@ -3090,10 +3089,6 @@ function initializeCommandTables() {
   }
 }
 
-window.addEventListener("DOMContentLoaded", () => {
-  initializeCommandTables();
-});
-
     const nameAliases = {
     "antigua": "Antigua and Barbuda",
     "bosnia": "Bosnia and Herzegovina",
@@ -3114,7 +3109,6 @@ window.addEventListener("DOMContentLoaded", () => {
     "emirates": "United Arab Emirates",
     "gb": "United Kingdom",
     "guinea bissau": "Guinea-Bissau",
-    "iran": "Iran",
     "ivory coast": "Côte d'Ivoire",
     "the ivory coast": "Côte d'Ivoire",
     "ksa": "Saudi Arabia",
@@ -3130,7 +3124,6 @@ window.addEventListener("DOMContentLoaded", () => {
     "sao tome & principe": "São Tomé and Príncipe",
     "sao tome and principe": "São Tomé and Príncipe",
     "saudi": "Saudi Arabia",
-    "south korea": "South Korea",
     "saint kitts": "Saint Kitts and Nevis",
     "saint kitts & nevis" : "Saint Kitts and Nevis",
     "st kitts": "Saint Kitts and Nevis",
@@ -3159,7 +3152,6 @@ window.addEventListener("DOMContentLoaded", () => {
     "u.s.": "United States of America",
     "u.s.a.": "United States of America",
     "united states": "United States of America",
-    "united states of america": "United States of America",
     "us": "United States of America",
     "usa": "United States of America",
     "vatican": "Vatican City",
@@ -3168,6 +3160,7 @@ window.addEventListener("DOMContentLoaded", () => {
 };
 
 window.addEventListener("DOMContentLoaded", () => {
+  initializeCommandTables();
   document.getElementById("mapContainer").classList.add("grayed");
   document.getElementById("countryInput").disabled = true;
   document.getElementById("countryInput").placeholder = "Click 'Begin' to start";
@@ -3232,7 +3225,7 @@ function updateScore() {
 }
 
 function endGame() {
-  revealMissedCountries();
+  revealMissedCountries("timeout");
 }
 
 
@@ -3257,7 +3250,7 @@ input.addEventListener("keyup", function (e) {
     }
   });
   
-  function revealMissedCountries() {
+  function revealMissedCountries(reason) {
   for (const [cocom, countrySet] of Object.entries(combatantCommands)) {
     const container = document.getElementById(cocom);
 
@@ -3291,7 +3284,7 @@ input.addEventListener("keyup", function (e) {
 
   // Disable input and show a message
   input.disabled = true;
-  input.placeholder = "Time's up!";
+  input.placeholder = reason === "giveup" ? "You gave up!" : "Time's up!";
 }
 
 // 4. Timer logic
@@ -3308,6 +3301,7 @@ function updateTimerDisplay() {
 }
 
 document.getElementById("whatamimissingButton").addEventListener("click", () => {
+  if (!gameStarted) return;
   const remainingCountries = Array.from(document.querySelectorAll(".country"))
     .filter(div => !div.classList.contains("found"))
     .map(div => div.dataset.country?.toLowerCase());
@@ -3329,29 +3323,28 @@ document.getElementById("whatamimissingButton").addEventListener("click", () => 
     }
   });
 
-  // Remove flash after 2 seconds
+  // Remove flash after animation completes (3 iterations × 1s each = 3s)
   setTimeout(() => {
     document.querySelectorAll(".flash-missed").forEach(el => el.classList.remove("flash-missed"));
-  }, 1000);
+  }, 3000);
 });
 
 let gameStarted = false;
 
 //Begin Button//
 
-beginButton.addEventListener("click", () => {
+document.getElementById("beginButton").addEventListener("click", () => {
   if (gameStarted) return;
   gameStarted = true;
 
-// Un-dim the map
+  // Un-dim the map
   document.getElementById("mapContainer").classList.remove("grayed");
 
-// Enable input
-  const input = document.getElementById("countryInput");
+  // Enable input
   input.disabled = false;
   input.placeholder = "Type country name here";
 
-// Start timer anchored to wall-clock time
+  // Start timer anchored to wall-clock time
   timeRemaining = 600;
   endTime = Date.now() + 600 * 1000;
   updateTimerDisplay();
@@ -3360,7 +3353,7 @@ beginButton.addEventListener("click", () => {
     if (timeRemaining <= 0) {
       clearInterval(countdown);
       endGame();
-      showTimeoutModal(); // ✅ show modal on timeout}
+      showTimeoutModal();
     }
   }, 1000);
 });
@@ -3404,10 +3397,10 @@ function closevictoryModal() {
 }
 
 document.getElementById("giveUpButton").addEventListener("click", () => {
-  if (!gameStarted) return; // Prevent giving up if game hasn't started
-  revealMissedCountries();
-  showGiveUpModal();
+  if (!gameStarted) return;
   clearInterval(countdown);
+  revealMissedCountries("giveup");
+  showGiveUpModal();
 });
 </script>
 </body>
