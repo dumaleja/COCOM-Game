@@ -15,7 +15,7 @@
   font-family: Arial, sans-serif;
   text-align: center;
 }
-    .found { fill: rgba(3, 179, 3, 0.5) !important; fill-rule: nonzero !important; }
+    .found { fill: #3ABE3A !important; fill-rule: nonzero !important; }
     input { padding: 10px; width: 300px; font-size: 16px; }
     #score { margin-top: 10px; }
   
@@ -5424,11 +5424,11 @@ input.addEventListener("keyup", function (e) {
           if (svgEl.getAttribute("country-data").trim() !== countryName) return;
           if (svgEl.tagName.toLowerCase() === "g") {
             svgEl.querySelectorAll("path, circle").forEach(child => {
-              child.style.fill = "rgba(255, 0, 0, 0.5)";
+              child.style.fill = "#F73838";
               child.style.fillRule = "nonzero";
             });
           } else {
-            svgEl.style.fill = "rgba(255, 0, 0, 0.5)";
+            svgEl.style.fill = "#F73838";
             svgEl.style.fillRule = "nonzero";
           }
         });
