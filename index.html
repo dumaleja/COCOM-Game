@@ -5337,7 +5337,7 @@ function highlightCountryByDataCountry(inputName) {
       // If it's a group, highlight its children
       if (el.tagName.toLowerCase() === "g") {
         el.classList.add("found");
-        const children = el.querySelectorAll("path, circle, use");
+        const children = el.querySelectorAll("path:not(.st2), circle, use");
         children.forEach(child => child.classList.add("found"));
       } else {
         // Single element (path, circle, etc.)
@@ -5416,17 +5416,17 @@ input.addEventListener("keyup", function (e) {
           box.classList.add("missed");
         }
 
-        // Also color the SVG element (if it exists)
-        const svgEl = document.querySelector(`[country-data="${countryName}"]`);
-        if (svgEl) {
+        // Also color ALL matching SVG elements (duplicates exist in the map)
+        document.querySelectorAll(`[country-data]`).forEach(svgEl => {
+          if (svgEl.getAttribute("country-data").trim() !== countryName) return;
           if (svgEl.tagName.toLowerCase() === "g") {
-            svgEl.querySelectorAll("path, circle").forEach(child => {
+            svgEl.querySelectorAll("path:not(.st2), circle").forEach(child => {
               child.style.fill = "rgba(255, 0, 0, 0.5)";
             });
           } else {
             svgEl.style.fill = "rgba(255, 0, 0, 0.5)";
           }
-        }
+        });
       }
     });
   }
@@ -5463,7 +5463,7 @@ document.getElementById("whatamimissingButton").addEventListener("click", () => 
     const countryName = el.getAttribute("country-data")?.trim().toLowerCase();
     if (remainingCountries.includes(countryName)) {
       if (el.tagName.toLowerCase() === "g") {
-        el.querySelectorAll("path, circle").forEach(child => {
+        el.querySelectorAll("path:not(.st2), circle").forEach(child => {
           child.classList.add("flash-missed");
         });
       } else {
