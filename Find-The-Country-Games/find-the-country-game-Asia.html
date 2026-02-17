@@ -5,11 +5,29 @@
   <title>Find the Country - Asia</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Segoe UI', Arial, sans-serif;
       text-align: center;
-      background: radial-gradient(circle at top center, #bfd4f5, #597aab, #013277);
+      background: #0a0e17;
+      color: #e0e0e0;
       margin: 0;
     }
+
+    .back-home {
+      position: fixed;
+      top: 12px;
+      left: 16px;
+      z-index: 10001;
+      text-decoration: none;
+      color: #7a8ba5;
+      font-size: 0.85rem;
+      font-weight: 600;
+      padding: 6px 14px;
+      border: 1px solid rgba(0,180,255,0.15);
+      border-radius: 6px;
+      background: rgba(13,18,30,0.9);
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .back-home:hover { color: #00b4ff; border-color: rgba(0,180,255,0.4); }
 
     #map-container { width: 100%; height: auto; }
 
@@ -37,8 +55,8 @@
 
     #top-bar {
       display: flex; justify-content: space-between; align-items: center;
-      padding: 1rem 2rem; border: 2px solid #000; border-radius: 8px;
-      background-color: #ccc; font-family: sans-serif; position: sticky; top: 0;
+      padding: 1rem 2rem; border: 1px solid #2a3a52; border-radius: 8px;
+      background-color: #131a2b; font-family: 'Segoe UI', sans-serif; position: sticky; top: 0;
       z-index: 1000;
     }
 
@@ -50,12 +68,13 @@
 
     #score-box { display: flex; flex-direction: column; align-items: flex-end; text-align: right; }
 
-    #target-country { font-size: 1.4rem; font-weight: 600; text-align: center; flex: 2; color: #333; }
+    #target-country { font-size: 1.4rem; font-weight: 600; text-align: center; flex: 2; color: #e0e0e0; }
 
     #score {
-      background-color: #ffffffee; padding: 0.6rem 1.2rem; border: 2px solid #333;
+      background-color: rgba(19,26,43,0.95); padding: 0.6rem 1.2rem; border: 1px solid #2a3a52;
       border-radius: 8px; font-weight: bold; font-size: 1.2rem; text-align: right;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      color: #c0d0e0;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
     }
 
     .modal {
@@ -64,26 +83,30 @@
     }
 
     .modal-content {
-      background-color: #fff; margin: 15% auto; padding: 2rem; border-radius: 8px;
-      width: 80%; max-width: 400px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+      background-color: #131a2b; margin: 15% auto; padding: 2rem; border-radius: 8px;
+      width: 80%; max-width: 400px; text-align: center; box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+      border: 1px solid rgba(0,180,255,0.15);
+      color: #e0e0e0;
       position: relative;
     }
 
     .close {
       position: absolute; right: 20px; top: 15px; font-size: 1.5rem; font-weight: bold; cursor: pointer;
+      color: #7a8ba5;
     }
 
     .modal-button {
       margin-top: 1.2rem; padding: 0.6rem 1.2rem; font-size: 1rem;
-      background-color: #2196F3; color: white; border: none; border-radius: 6px; cursor: pointer;
+      background-color: #0099ff; color: white; border: none; border-radius: 6px; cursor: pointer;
     }
-    .modal-button:hover { background-color: #1976D2; }
+    .modal-button:hover { background-color: #007fd3; }
 
     #instructionsBox {
       max-width: 600px; margin: 20px auto; padding: 16px 24px;
-      border: 2px solid #000; border-radius: 8px; background-color: #ccc;
-      font-family: Arial, sans-serif; font-size: 12px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      border: 1px solid #2a3a52; border-radius: 8px; background-color: #131a2b;
+      font-family: 'Segoe UI', Arial, sans-serif; font-size: 12px;
+      color: #a0b0c0;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
     }
     #instructionsBox h2 { text-align: left; margin-bottom: 12px; }
     #instructionsBox ul { text-align: left; line-height: 1.6; padding-left: 20px; }
@@ -91,6 +114,7 @@
 </head>
 
 <body>
+  <a class="back-home" href="../index.html">&#8592; Home</a>
   <!-- FLASH FEEDBACK -->
   <div id="flash-feedback"></div>
 
@@ -111,7 +135,7 @@
   <defs>
     <style>
       .st0, .st1, .st2, .st3, .st4, .st5 {
-        stroke: #000;
+        stroke: #0a0e17;
       }
 
       .st0, .st1, .st2, .st3, .st4, .st5 {
@@ -120,7 +144,7 @@
 
     
       .st0, .st1, .st2, .st3, .st4, .st5 {
-        fill: #e0e0e0;
+        fill: #2a3a52;
       }
 
       .st0, .st1, .st3, .st4, .st5 {
