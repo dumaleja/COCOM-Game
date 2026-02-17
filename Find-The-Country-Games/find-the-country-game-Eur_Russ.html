@@ -20,7 +20,8 @@
     }
     .back-home:hover { color: #00b4ff; border-color: rgba(0,180,255,0.4); }
 
-    #map-container { width: 100%; height: auto; }
+    #map-container { width: 100%; height: calc(100vh - 80px); overflow: hidden; }
+    #map-container svg { display: block; width: 100%; height: 100%; }
 
     svg *[country-data] { cursor: pointer; }
 
@@ -125,7 +126,7 @@
   <defs>
    <style>
       .st0, .st1, .st2, .st3, .st4, .st5 {
-        stroke: #0a0e17;
+        stroke: #5a7a9a;
       }
 
       .st0, .st1, .st2, .st3, .st4, .st5 {
