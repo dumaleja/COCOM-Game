@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Find the Country</title>
+  <title>Find the Country - Africa</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -14,7 +14,7 @@
     /* Map wrapper actually used */
     #map-container {
       width: 100%;
-      height: 50%;
+      height: auto;
     }
 
     /* Countries (attribute is on <g>, click still works via closest()) */
@@ -22,22 +22,15 @@
       cursor: pointer;
     }
 
-    /* Your original path styles */
-    .cls-1, .cls-3 { fill: transparent; stroke-width: .5px; }
-    .cls-1, .cls-2, .cls-3 { stroke: #1f1a17; stroke-width: .5px; }
-    .cls-2 { fill: #ddd; stroke-miterlimit: 1.58; }
-
     .correct { fill: rgba(0,154,0,0.5) !important; }
     .incorrect { fill: rgba(255,0,0,0.5) !important; }
-    .fade-out { fill: transparent !important; }
-
-    #button-board { justify-content: center; gap: 1rem; margin-top: 1rem; }
 
     #skip-btn {
       background-color: #FFEB3B; color: #000;
-      height: fit-content; padding: 0.6rem 1.2rem; font-size: 1rem; font-weight: bold;
-      border-radius: 8px; font-weight: bold; font-size: 1.2rem; text-align: right;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      height: fit-content; padding: 0.6rem 1.2rem;
+      font-size: 1rem; font-weight: bold;
+      border-radius: 8px; cursor: pointer;
+      transition: background-color 0.3s ease;
     }
     #skip-btn:hover { background-color: #d5b62a; }
 
@@ -64,9 +57,7 @@
 
     #score-box { display: flex; flex-direction: column; align-items: flex-end; text-align: right; }
 
-    #game-title { font-size: 1.6rem; text-align: left; font-weight: bold; }
-
-    #target-country { font-size: 1.4rem; font-weight: 600; flex: 2; color: #333; }
+    #target-country { font-size: 1.4rem; font-weight: 600; text-align: center; flex: 2; color: #333; }
 
     #score {
       background-color: #ffffffee; padding: 0.6rem 1.2rem; border: 2px solid #333;
@@ -94,6 +85,15 @@
       background-color: #2196F3; color: white; border: none; border-radius: 6px; cursor: pointer;
     }
     .modal-button:hover { background-color: #1976D2; }
+
+    #instructionsBox {
+      max-width: 600px; margin: 20px auto; padding: 16px 24px;
+      border: 2px solid #000; border-radius: 8px; background-color: #ccc;
+      font-family: Arial, sans-serif; font-size: 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    #instructionsBox h2 { text-align: left; margin-bottom: 12px; }
+    #instructionsBox ul { text-align: left; line-height: 1.6; padding-left: 20px; }
   </style>
 </head>
 
@@ -108,14 +108,11 @@
     </div>
   </div>
 
-  <p id="feedback"></p>
-
-  <!-- FLASH FEEDBACK (moved into body) -->
+  <!-- FLASH FEEDBACK -->
   <div id="flash-feedback"></div>
 
-  <!-- MAP CONTAINER (wrap the SVG) -->
-<div id="map-container">
-<?xml version="1.0" encoding="UTF-8"?>
+  <!-- MAP CONTAINER -->
+  <div id="map-container">
 <svg id="svg2" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:svg="http://www.w3.org/2000/svg" viewBox="0 0 260.57 255.1">
   <!-- Generator: Adobe Illustrator 29.5.1, SVG Export Plug-In . SVG Version: 2.1.0 Build 141)  -->
   <defs>
@@ -145,7 +142,7 @@
   <g country-data="Burkina Faso" id="bf">
     <path id="bf1" data-name="bf" class="st0" d="M63.64,97.36c.21-.55.4-1.18.27-1.76-.14-.64.25-.26.49-.74.15-.3.48-1.2.13-1.47-.24-.18.23-.59-.47-.78.33.02.53-.24.78-.39.41-.25.99-.04,1.41-.3.52-.31,1.14-1.54.68-2.07-.22-.26.1-.43.38-.39.43.05.4-.34.33-.68-.04-.22-.48-.55-.1-.68.29-.1.7-.93.88-1.19-.02.5,1.16,1.1,1.56,1.14-.1-.47.21-.41.6-.4-.05-.43.16-1.02-.06-1.42.32.06.65.08.94.26.43-.65.38-2.07,1.5-2.18.55-.06,1.24.82,1.34-.16.06-.52.64-.46,1-.64.47-.24.82-.59,1.31-.82.58-.28,1.64-1.71,2.46-.98.15.14.53-.18.78-.11.34.1.68.22,1,.38.49.24-.41,1.49.34,1.9.47.25.1,1.04.45,1.4.2.2.6.61.53.87.37.15,1.35.8,1.97,1.29-.28.14-.54.13-.79-.06-.38.98.91,2.12,1.69,2.49.63.3.98-.45,1.43-.32.37.11.44.69.58.98-1,.34-.17.92.2,1.6.39.73-.55,1.79-1.27,1.84-.18,0-.87.21-1,.11-.35-.28-.43-.14-.73.13-.58.52-.91,1.21-1.65,1.31-1.15.16-1.35-.2-2.03-.33-.32-.06-.63-.17-.97-.17-.3,0-1.07.77-1.3.67-.54-.23.64-.25-3.39-.24-1.34,0-2.13.1-3.21,0,.13.62-.46.93-.29,1.31.23.51.34.91.43,1.44.08.45.12,1.01.07,1.52-.05.44.3.98,0,1.22-.5-.37-.97-1.26-1.31-1.79-.28.42-1.43-.08-1.88.09-.49.18-1.5.33-1.51,1.02-.31-.05-1.38-.5-1.57-.74-.18-.22-.36-.33-.39-.5-.06-.34-.38-.99-.62-1.12-.41-.22-.87.1-1.02-.51" inkscape:connector-curvature="0"/>
   </g>
-  <g country-data="Lybia" id="ly">
+  <g country-data="Libya" id="ly">
     <path id="ly1" data-name="ly" class="st0" d="M108.48,30.4c-.38-.33.43-.71.64-.81.63-.29.98-.46,1.36-1.09.31-.5.62-.74.5-1.39-.1-.56-.37-1.12-.31-1.7.08-.79,1.04-.59,1.2-1.16.17-.61.67-.93,1.18-1.18.39-.19,1.67-.54,1.68-1.08,0-.27-.26-.44-.23-.73.05-.53.07-1.06.12-1.59.51.36,1.2.54,1.74.87.58.35,1.23.47,1.9.4.68-.07,1.18-.5,1.87-.25.62.22,1.28.25,1.88.51.54.23.97.64,1.51.86.47.19,1.12,0,1.54.28.5.34.59.94.69,1.49.12.71.4,1.27.95,1.75,1,.86,2.23.66,3.43.88s2.92.77,3.88,1.55c.77.62,1.48,1.68,2.59,1.58,1.27-.11,2.64-1.24,2.92-2.52.13-.59-.27-1.05-.45-1.58-.2-.59-.35-1.26-.14-1.87.37-1.11,2.2-2.5,3.37-2.53.6-.02.95-.46,1.51-.5.57-.04,1.17-.05,1.73.08.65.16,1.21.47,1.83.71.73.29.54.38.57,1.02.03.52.86.63,1.24.65.72.05,1.19.38,1.86.58.66.19,1.36-.03,2.03.09.38.07.96.83.82,1.23-.14.42-.66.53-.73,1-.1.66.32,1.14.43,1.75.13.69-.31,1.29-.55,1.89-.25.63.4,1.38.51,2.04.18,1.12.38,2.17.45,3.32l.7,29.73h-2.95c.03.57,0,1.14.06,1.71l-23.56-13.33-5.34,2.56c-.45.12-1.01-.61-1.27-.88-1.1-1.1-2.3-1.32-3.77-1.66-.52-.12-1.21-.18-1.68-.47-.37-.23-.55-.88-.7-1.25-.45-1.1-1-1.4-2.08-1.81-.36-.13-.7-.44-1.09-.43-.38,0-.8.44-1.16.05-.29-.32-.8-1.13-.81-1.57-.02-.91-.1-1.25-.61-2.03-.39-.6-1.68-1.67-1.12-2.47.64-.92,1.62-.57,1.2-2.08-.21-.76-.36-1.34-.1-2.1.22-.66.35-1.2.11-1.88-.26-.71-.06-1.43,0-2.16.08-.86-.05-1.73-.34-2.54-.25-.7-.6-1.35-1.04-1.95" inkscape:connector-curvature="0"/>
   </g>
   <g country-data="Madagascar" id="mg">
@@ -153,7 +150,7 @@
     <path id="path2624" class="st2" d="M225.03,178.88c.14-.25-.03-.51-.2-.68-.28.23-.21.69.2.68" inkscape:connector-curvature="0"/>
     <path id="path2628" class="st2" d="M229.5,190.28v-.17c-.17.32-.61.67-.43,1.08.18-.29.26-.62.43-.91" inkscape:connector-curvature="0"/>
   </g>
-  <g country-data="Côte dIvoire" id="ci">
+  <g country-data="Côte d'Ivoire" id="ci">
     <path id="ci1" data-name="ci" class="st0" d="M54.23,110.78c.17-.37.61-.45.76-.84.1-.26.18-.68.2-.95.03-.5-.17-1.42-.53-1.79.23-.25.56-.12.79.03.05-.3.53-.62.34-.95-.15-.27.1-.83.46-.64-.27-.4-.75-.65-.87-1.15-.23-.94,1.52-.2,1.8-.07-.2-.62-.13-1.32-.94-1.45.15-.42.15-.86.68-.94-.44-.53-.53-.41-.37-1.19-.96.62-.92-1.52-.8-1.99.12-.46.45-.57.85-.69.22-.06.23-.47.4-.62.25-.21.55-.08.83-.2-.06.55,1.06,1.11,1.51.91-.3-.5.21-.53.58-.52.49,0,.32-.8.33-1.13.19.11.39.47.66.4.25-.07.3-.54.57-.65.22.39-.09,1.72.48,1.86.51.13.1-.99,1.66-.94.15,0-.33.45.91.53.59.04.71,1.19.79,1.29.41.49,1.17,1.01,1.94,1.16,0-.69,1.02-.84,1.51-1.02.44-.17,1.59.34,1.88-.09.48.57.67,1.18,1.31,1.79.07-.09.14-.19.2-.28.19.56-.25,1.1-.17,1.39.14.47.42.7.48,1.25.05.45.33,1.22.17,1.65-.19.48-.43.74-.67,1.18-.31.58-.85.92-.83,1.57.02.84-.39,1.45-.56,2.08-.18.66-.1,1.72.31,2.26.4.53.58,1.24.43,1.8,1.01-.28.42,1.26.58,1.73-.2,0-.4.02-.6.09.06-.11.12-.21.2-.31-.48.71-.87-.18-.97-.54-.26.28-.35.68-.79.71-.28.02-.65-.11-.85-.31-.16.29-.52.02-.66-.11.25-.05.52.19.71-.09-.08-.09-.18-.17-.28-.23.12.57-.11.04-.51.14.08.17-.94.07-1.18.1-.13,0-1.39.24-1.29.29.63.34,1.88-.75,2.38-.11-.79.04-1.54.17-2.31.31-.17.03-.53.11-.65-.1-.16-.29-.92-.16-1.19.1.45-.18.7-.13,1.14.03-.97.11-2,.06-2.91.45-.79.34-1.5.98-2.38,1.07-.45.05-1.41.55-1.74.87-.74.71-.87-.6-.76-1.15.14-.65.36-1.36.54-1.89.24-.71.03-1.48-.53-1.95-.34-.29-.83-.41-.78-1.01.06-.69-2.03-.09-1.61-.88-.25.06-.48-.05-.65-.23" inkscape:connector-curvature="0"/>
   </g>
   <g country-data="Algeria" id="dz">
@@ -358,205 +355,327 @@
 </svg>
 </div>
 
-<div id="instructionsBox" style="
-  max-width: auto;
-  margin: 20px auto;
-  padding: 16px 24px;
-  border: 2px solid #000;
-  border-radius: 8px;
-  background-color: #ccc;
-  font-family: Arial, sans-serif;
-  font-size: 12px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-">
-
-  <h2 style="text-align: left; margin-bottom: 12px;">Instructions</h2>
-
-  <ul style="text-align: left; line-height: 1.6; padding-left: 20px;">
-    <li>Click the correct country on the map based on the prompt.</li>
-    <li>You have 3 chances to answer correctly — 3 consecutive wrong answers ends the game.</li>
-    <li>Use the <strong>Skip</strong> button to move on, but beware, attempts carry over.
-
-</li>
-  </ul>
-  <h2 style="text-align: left; margin-bottom: 12px;">Notes</h2>
-  <ul style="text-align: left; line-height: 1.6; padding-left: 20px;">
-    <li>This game includes 54 countries of Africa as recognized by the United Nations, plus 1 politically significant/disputed territories.</li>
-  </ul>
+  <div id="instructionsBox">
+    <h2>Instructions</h2>
+    <ul>
+      <li>Click the correct country on the map based on the prompt.</li>
+      <li>You have 3 chances to answer correctly — 3 consecutive wrong answers ends the game.</li>
+      <li>Use the <strong>Skip</strong> button to move on, but beware, attempts carry over.</li>
+    </ul>
+    <h2>Notes</h2>
+    <ul>
+      <li>This game includes 54 countries of Africa as recognized by the United Nations, plus 1 politically significant/disputed territory.</li>
+    </ul>
   </div>
 
-  <!-- GAME OVER MODAL (standalone) -->
+  <!-- GAME OVER MODAL -->
   <div id="end-modal" class="modal">
     <div class="modal-content">
       <span id="close-modal" class="close">&times;</span>
       <h2 id="modal-title">Game Over</h2>
       <p id="modal-message">You missed 3 in a row.</p>
       <img src="https://media1.tenor.com/m/-lef55uNCOMAAAAd/coffin-dance.gif" alt="Time Out" style="max-width: 100%; border-radius: 10px;" />
-      <button onclick="resetGame()" class="modal-button">🔁 Play Again</button>
+      <button class="modal-button">🔁 Play Again</button>
     </div>
   </div>
 
-  <!-- WIN MODAL (not nested inside the other modal) -->
+  <!-- WIN MODAL -->
   <div id="win-modal" class="modal">
     <div class="modal-content">
       <span id="close-win-modal" class="close">&times;</span>
       <h2 id="win-modal-title">🎉 You Win!</h2>
       <p id="win-modal-message">You identified all African countries correctly!</p>
       <img src="https://i.makeagif.com/media/10-09-2023/JYI9Tc.gif" alt="Winner!" style="max-width: 100%; border-radius: 10px;" />
-      <button onclick="resetGame()" class="modal-button">🔁 Play Again</button>
+      <button class="modal-button">🔁 Play Again</button>
     </div>
   </div>
 
-  <!-- 🧠 Your original script (unchanged) – now before </body> -->
   <script>
-    const TOTAL_COUNTRIES = 55;
-    let consecutiveMisses = 0;
-    let targetCountry = "";
-    let attempts = 0;
-    const maxAttempts = 3;
-    let score = 0;
-    let attemptedCountries = new Set();
-    let incorrectCountriesThisRound = new Set();
+  (() => {
+    const MAX_ATTEMPTS = 3;
+    const MISS_LIMIT = 3;
+    let TOTAL_COUNTRIES = 0;
 
-    function showModal(title, message) {
-      document.getElementById("modal-title").textContent = title;
-      document.getElementById("modal-message").textContent = message;
-      document.getElementById("end-modal").style.display = "block";
+    const state = {
+      target: "",
+      attempts: 0,
+      score: 0,
+      consecutiveMisses: 0,
+      attempted: new Set(),
+      incorrectThisRound: new Set(),
+    };
+
+    const $ = (sel) => document.querySelector(sel);
+    const $$ = (sel) => Array.from(document.querySelectorAll(sel));
+
+    const els = () => ({
+      targetLabel: $("#target-country"),
+      scoreLabel: $("#score"),
+      attemptsIndicator: $("#attempts-indicator"),
+      flash: $("#flash-feedback"),
+      endModal: $("#end-modal"),
+      winModal: $("#win-modal"),
+      modalTitle: $("#modal-title"),
+      modalMessage: $("#modal-message"),
+      closeEnd: $("#close-modal"),
+      closeWin: $("#close-win-modal"),
+      skipBtn: $("#skip-btn"),
+    });
+
+    function countCountries() {
+      return new Set(
+        Array.from(document.querySelectorAll("svg *[country-data]"))
+          .map(el => el.getAttribute("country-data"))
+          .filter(Boolean)
+      ).size;
     }
 
-    function resetGame() {
-      attemptedCountries.clear();
-      score = 0;
-      consecutiveMisses = 0;
+    function setModal({ title = "", message = "", type = "end" }) {
+      const { endModal, winModal, modalTitle, modalMessage } = els();
+      endModal.style.display = "none";
+      winModal.style.display = "none";
 
-      document.querySelectorAll(".correct").forEach(el => el.classList.remove("correct"));
-      document.querySelectorAll(".incorrect").forEach(el => el.classList.remove("incorrect"));
-
-      updateScore();
-      document.getElementById("end-modal").style.display = "none";
-      document.getElementById("win-modal").style.display = "none";
-      startGame();
-    }
-
-    function startGame() {
-      resetIncorrects();
-      const all = Array.from(document.querySelectorAll("svg *[country-data]"));
-      const validCountries = [...new Set(
-        all.map(el => el.getAttribute("country-data"))
-          .filter(name => name && name.length > 2 && !attemptedCountries.has(name))
-      )];
-
-      if (score >= TOTAL_COUNTRIES || validCountries.length === 0) {
-        document.getElementById("win-modal").style.display = "block";
+      if (type === "win") {
+        winModal.style.display = "block";
         return;
       }
 
-      targetCountry = validCountries[Math.floor(Math.random() * validCountries.length)];
-      document.getElementById("target-country").textContent = `Click on: ${targetCountry}`;
-      document.getElementById("feedback").textContent = "";
-      if (targetCountry === "" || attempts >= maxAttempts) attempts = 0;
-      updateAttempts();
-      incorrectCountriesThisRound.clear();
+      modalTitle.textContent = title;
+      modalMessage.textContent = message;
+      endModal.style.display = "block";
     }
 
-    function resetIncorrects() {
-      incorrectCountriesThisRound.forEach(country => {
-        const elems = document.querySelectorAll(`[country-data='${country}']`);
-        elems.forEach(el => {
-          el.classList.remove("incorrect");
-          el.querySelectorAll("*").forEach(child => child.classList.remove("incorrect"));
-        });
-      });
-      incorrectCountriesThisRound.clear();
+    function flash(message, color) {
+      const { flash } = els();
+      if (!flash) return;
+
+      flash.textContent = message;
+      flash.style.backgroundColor = color;
+      flash.style.display = "block";
+      flash.style.opacity = "1";
+
+      clearTimeout(flash._t1);
+      clearTimeout(flash._t2);
+
+      flash._t1 = setTimeout(() => {
+        flash.style.opacity = "0";
+        flash._t2 = setTimeout(() => {
+          flash.style.display = "none";
+        }, 250);
+      }, 350);
     }
 
     function updateScore() {
-      document.getElementById("score").textContent = `Correct: ${score} / ${TOTAL_COUNTRIES}`;
-    }
-
-    function flashFeedback(message, color = "#229954") {
-      const fb = document.getElementById("flash-feedback");
-      fb.textContent = message;
-      fb.style.backgroundColor = color;
-      fb.style.display = "block";
-      fb.style.opacity = "1";
-      setTimeout(() => {
-        fb.style.opacity = "0";
-        setTimeout(() => { fb.style.display = "none"; }, 1000);
-      }, 300);
-    }
-
-    function highlightCountry(countryName, className) {
-      const countryElems = document.querySelectorAll(`[country-data='${countryName}']`);
-      countryElems.forEach(parent => {
-        parent.classList.add(className);
-        parent.querySelectorAll("*").forEach(child => child.classList.add(className));
-      });
+      const { scoreLabel } = els();
+      scoreLabel.textContent = `Correct: ${state.score} / ${TOTAL_COUNTRIES}`;
     }
 
     function updateAttempts() {
       const indicator = document.getElementById("attempts-indicator");
-      if (!targetCountry) { indicator.textContent = ""; return; }
-      const left = maxAttempts - attempts;
-      const colors = ["🔴","🟡","🟢"];
-      indicator.textContent = colors.slice(0, left).join("");
+      if (!state.target) {
+        indicator.textContent = "";
+        return;
+      }
+      const left = MAX_ATTEMPTS - state.attempts;
+      if (left >= 3) {
+        indicator.textContent = "🔴🟡🟢";
+      } else if (left === 2) {
+        indicator.textContent = "🔴🟡";
+      } else if (left === 1) {
+        indicator.textContent = "🔴";
+      } else {
+        indicator.textContent = "";
+      }
+    }
+
+    function setTargetLabel() {
+      const { targetLabel } = els();
+      targetLabel.textContent = state.target ? `Click on: ${state.target}` : "";
+    }
+
+    function allCountryNames() {
+      const nodes = $$("svg *[country-data]");
+      const names = nodes
+        .map((n) => n.getAttribute("country-data"))
+        .filter((name) => name && name.length > 2);
+      return [...new Set(names)];
+    }
+
+    function pickNextTarget() {
+      const names = allCountryNames().filter((n) => !state.attempted.has(n));
+      if (state.score >= TOTAL_COUNTRIES || names.length === 0) return "";
+      return names[Math.floor(Math.random() * names.length)];
+    }
+
+    function markCountry(name, className) {
+      const escaped = CSS.escape(name);
+      $$(`[country-data="${escaped}"]`).forEach((parent) => {
+        parent.classList.add(className);
+        parent.querySelectorAll("*").forEach((child) => child.classList.add(className));
+      });
+    }
+
+    function clearClassFromAll(className) {
+      $$("." + className).forEach((el) => el.classList.remove(className));
+    }
+
+    function clearIncorrectsThisRound() {
+      state.incorrectThisRound.forEach((name) => {
+        const escaped = CSS.escape(name);
+        $$(`[country-data="${escaped}"]`).forEach((parent) => {
+          parent.classList.remove("incorrect");
+          parent.querySelectorAll("*").forEach((child) => child.classList.remove("incorrect"));
+        });
+      });
+      state.incorrectThisRound.clear();
+    }
+
+    function resetGame() {
+      state.target = "";
+      state.attempts = 0;
+      state.score = 0;
+      state.consecutiveMisses = 0;
+      state.attempted.clear();
+      state.incorrectThisRound.clear();
+
+      clearClassFromAll("correct");
+      clearClassFromAll("incorrect");
+
+      const { endModal, winModal } = els();
+      endModal.style.display = "none";
+      winModal.style.display = "none";
+
+      updateScore();
+      updateAttempts();
+      startRound();
+    }
+
+    function startRound() {
+      clearIncorrectsThisRound();
+
+      state.target = pickNextTarget();
+      state.attempts = 0;
+
+      if (!state.target) {
+        setModal({ type: "win" });
+        return;
+      }
+
+      setTargetLabel();
+      updateAttempts();
+    }
+
+    function handleCorrect() {
+      const solved = state.target;
+      markCountry(solved, "correct");
+
+      state.attempted.add(solved);
+      state.score += 1;
+      state.consecutiveMisses = 0;
+
+      flash("Okay!", "#229954");
+      updateScore();
+
+      setTimeout(startRound, 900);
+    }
+
+    function handleWrong(clicked) {
+      markCountry(clicked, "incorrect");
+      state.incorrectThisRound.add(clicked);
+
+      state.attempts += 1;
+      state.consecutiveMisses += 1;
+      updateAttempts();
+
+      if (state.consecutiveMisses >= MISS_LIMIT) {
+        setModal({
+          title: "🛑 Game Over",
+          message: `You missed ${MISS_LIMIT} in a row. Final score: ${state.score} / ${TOTAL_COUNTRIES}`,
+          type: "end",
+        });
+        state.target = "";
+        setTargetLabel();
+        return;
+      }
+
+      if (state.attempts >= MAX_ATTEMPTS) {
+        state.attempted.add(state.target);
+        state.target = "";
+        setTargetLabel();
+        setTimeout(startRound, 900);
+        return;
+      }
+
+      flash("Wrong!", "#e74c3c");
+    }
+
+    function wireModalDismissals() {
+      const { endModal, winModal, closeEnd, closeWin } = els();
+      const restart = () => resetGame();
+
+      closeEnd?.addEventListener("click", restart);
+      closeWin?.addEventListener("click", restart);
+
+      const restartButtons = [
+        ...(endModal ? endModal.querySelectorAll("button, a") : []),
+        ...(winModal ? winModal.querySelectorAll("button, a") : []),
+      ].filter((el) => {
+        const txt = (el.textContent || "").trim().toLowerCase();
+        return txt.includes("play");
+      });
+
+      restartButtons.forEach((btn) => btn.addEventListener("click", restart));
+
+      endModal?.addEventListener("click", (e) => {
+        if (e.target === e.currentTarget) restart();
+      });
+      winModal?.addEventListener("click", (e) => {
+        if (e.target === e.currentTarget) restart();
+      });
+
+      document.addEventListener("keydown", (e) => {
+        const endShowing = endModal && getComputedStyle(endModal).display !== "none";
+        const winShowing = winModal && getComputedStyle(winModal).display !== "none";
+        if ((endShowing || winShowing) && e.key === "Escape") restart();
+      });
+    }
+
+    function wireGameClicks() {
+      document.addEventListener("click", (e) => {
+        const hit = e.target.closest("[country-data]");
+        if (!hit) return;
+        if (!state.target) return;
+
+        const clicked = hit.getAttribute("country-data");
+        if (!clicked) return;
+
+        if (state.attempted.has(clicked)) return;
+        if (state.incorrectThisRound.has(clicked)) return;
+
+        if (clicked === state.target) handleCorrect();
+        else handleWrong(clicked);
+      });
+    }
+
+    function wireSkip() {
+      const { skipBtn } = els();
+      skipBtn?.addEventListener("click", () => {
+        if (!state.target) return;
+        state.target = "";
+        setTargetLabel();
+        setTimeout(startRound, 300);
+      });
     }
 
     document.addEventListener("DOMContentLoaded", () => {
-      document.getElementById("close-modal").addEventListener("click", () => {
-        document.getElementById("end-modal").style.display = "none";
-      });
-      document.getElementById("close-win-modal").addEventListener("click", () => {
-        document.getElementById("win-modal").style.display = "none";
-      });
-      document.getElementById("skip-btn").addEventListener("click", () => {
-        if (targetCountry) { targetCountry = ""; setTimeout(startGame, 500); }
-      });
-
-      document.addEventListener("click", function (e) {
-        const el = e.target.closest("[country-data]");
-        if (!el || !targetCountry || attempts >= maxAttempts) return;
-
-        const clicked = el.getAttribute("country-data");
-        if (!clicked || attemptedCountries.has(clicked) || incorrectCountriesThisRound.has(clicked)) return;
-
-        if (clicked === targetCountry) {
-          highlightCountry(targetCountry, "correct");
-          flashFeedback("Okay!", "#229954");
-          attemptedCountries.add(targetCountry);
-          score++;
-          consecutiveMisses = 0;
-          attempts = 0;
-          updateScore();
-          updateAttempts();
-          targetCountry = "";
-          setTimeout(startGame, 1000);
-        } else {
-          highlightCountry(clicked, "incorrect");
-          incorrectCountriesThisRound.add(clicked);
-          attempts++;
-          consecutiveMisses++;
-          updateAttempts();
-
-          if (consecutiveMisses >= 3) {
-            showModal("🛑 Game Over", `You missed 3 in a row. Final score: ${score} / ${TOTAL_COUNTRIES}`);
-            targetCountry = "";
-            return;
-          }
-
-          if (attempts >= maxAttempts) {
-            attemptedCountries.add(targetCountry);
-            targetCountry = "";
-            setTimeout(startGame, 1000);
-          } else {
-            flashFeedback("Wrong!", "#e74c3c");
-          }
-        }
-      });
-
+      wireModalDismissals();
+      wireGameClicks();
+      wireSkip();
+      TOTAL_COUNTRIES = countCountries();
       updateScore();
-      startGame();
+      startRound();
     });
+  })();
   </script>
 </body>
 </html>

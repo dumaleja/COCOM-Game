@@ -2,212 +2,110 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Find the Country</title>
+  <title>Find the Country - Central &amp; SW Asia</title>
   <style>
-
-body {
-  font-family: Arial, sans-serif;
-  text-align: center;
-  background: radial-gradient(
-    circle at top 
-    center,
-    #bfd4f5,  /* light color */
-    #597aab,
-    #013277  /* darker color */
-  );
-}
-
-#map-container {
-      width: auto;
-      height: auto;
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background: radial-gradient(circle at top center, #bfd4f5, #597aab, #013277);
+      margin: 0;
     }
 
+    #map-container { width: 100%; height: auto; }
 
-svg *[country-data] {
-  cursor: pointer;
-  align-items: center;   
-}
+    svg *[country-data] { cursor: pointer; }
 
-.correct {
-  fill: rgba(0, 154, 0, 0.5) !important;
-}
+    .correct { fill: rgba(0,154,0,0.5) !important; }
+    .incorrect { fill: rgba(255,0,0,0.5) !important; }
 
-.incorrect {
-  fill: rgba(255, 0, 0, 0.5) !important;
- }
+    #skip-btn {
+      background-color: #FFEB3B; color: #000;
+      height: fit-content; padding: 0.6rem 1.2rem;
+      font-size: 1rem; font-weight: bold;
+      border-radius: 8px; cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    #skip-btn:hover { background-color: #d5b62a; }
 
-.fade-out {
-  fill: transparent !important;
-} 
+    #flash-feedback {
+      position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      font-size: 1.8rem; font-weight: 600; padding: 0.6rem 1.2rem;
+      background-color: rgba(0,0,0,0.75); color: white; border-radius: 8px;
+      display: none; z-index: 9999; pointer-events: none; opacity: 0;
+      transition: opacity 1s ease-out;
+    }
 
-#button-board {
-  justify-content: center;
-  gap: 1rem;
-  margin-top: 1rem;
-}
+    #top-bar {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1rem 2rem; border: 2px solid #000; border-radius: 8px;
+      background-color: #ccc; font-family: sans-serif; position: sticky; top: 0;
+      z-index: 1000;
+    }
 
+    #attempts-indicator, #target-country, #score-box { flex: 1; text-align: center; }
 
-#skip-btn {
-  background-color: #FFEB3B;
-  color: #000;
-  height: fit-content;
-  padding: 0.6rem 1.2rem;
-  font-size: 1rem;
-  font-weight: bold;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
+    #attempts-indicator {
+      font-size: 1.4rem; letter-spacing: 0.4rem; user-select: none;
+    }
 
-#skip-btn:hover {
-  background-color: #d5b62a;
-}
+    #score-box { display: flex; flex-direction: column; align-items: flex-end; text-align: right; }
 
-#flash-feedback {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 1.8rem;
-  font-weight: 600;
-  padding: 0.6rem 1.2rem;
-  background-color: rgba(0, 0, 0, 0.75);
-  color: white;
-  border-radius: 8px;
-  display: none;
-  z-index: 9999;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 1s ease-out; /* ⬅️ longer fade-out */
-}
+    #target-country { font-size: 1.4rem; font-weight: 600; text-align: center; flex: 2; color: #333; }
 
-#top-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem 2rem;
-  border: 2px solid;
-  border: 2px solid #000;
-  border-radius: 8px;
-  background-color: #ccc;
-  font-family: sans-serif;
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-  box-shadow: #000;
-}
+    #score {
+      background-color: #ffffffee; padding: 0.6rem 1.2rem; border: 2px solid #333;
+      border-radius: 8px; font-weight: bold; font-size: 1.2rem; text-align: right;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
 
-/* Optional: visually balance layout by reserving equal space */
-#attempts-indicator, #target-country, #score-box {
-  flex: 1;
-  text-align: center;
-}
+    .modal {
+      display: none; position: fixed; z-index: 10000; left: 0; top: 0; width: 100%; height: 100%;
+      overflow: auto; background-color: rgba(0,0,0,0.6);
+    }
 
-#attempts-indicator {
-  font-size: 1.4rem;
-  letter-spacing: 0.4rem;
-  user-select: none;
-}
+    .modal-content {
+      background-color: #fff; margin: 15% auto; padding: 2rem; border-radius: 8px;
+      width: 80%; max-width: 400px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+      position: relative;
+    }
 
-#score-box {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  text-align: right;
-}
+    .close {
+      position: absolute; right: 20px; top: 15px; font-size: 1.5rem; font-weight: bold; cursor: pointer;
+    }
 
-#game-title {
-  font-size: 1.6rem;
-  text-align: left;
-  font-weight: bold;
-}
+    .modal-button {
+      margin-top: 1.2rem; padding: 0.6rem 1.2rem; font-size: 1rem;
+      background-color: #2196F3; color: white; border: none; border-radius: 6px; cursor: pointer;
+    }
+    .modal-button:hover { background-color: #1976D2; }
 
-#target-country {
-  font-size: 1.4rem;
-  font-weight: 600;
-  text-align: justified;
-  flex: 2;
-  color: #333;
-}
-
-#score {
-  background-color: #ffffffee;
-  padding: 0.6rem 1.2rem;
-  border: 2px solid #333;
-  border-radius: 8px;
-  font-weight: bold;
-  font-size: 1.2rem;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-
-  text-align: right;
-}
-.modal {
-  display: none; /* hidden by default */
-  position: fixed;
-  z-index: 10000;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  overflow: auto;
-  background-color: rgba(0,0,0,0.6);
-}
-
-.modal-content {
-  background-color: #fff;
-  margin: 15% auto;
-  padding: 2rem;
-  border-radius: 8px;
-  width: 80%;
-  max-width: 400px;
-  text-align: center;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-}
-
-.close {
-  position: absolute;
-  right: 20px;
-  top: 15px;
-  font-size: 1.5rem;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-.modal-button {
-  margin-top: 1.2rem;
-  padding: 0.6rem 1.2rem;
-  font-size: 1rem;
-  background-color: #2196F3;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-.modal-button:hover {
-  background-color: #1976D2;
-}
-
-</style>
-
-<div id="flash-feedback"></div>
-
+    #instructionsBox {
+      max-width: 600px; margin: 20px auto; padding: 16px 24px;
+      border: 2px solid #000; border-radius: 8px; background-color: #ccc;
+      font-family: Arial, sans-serif; font-size: 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    #instructionsBox h2 { text-align: left; margin-bottom: 12px; }
+    #instructionsBox ul { text-align: left; line-height: 1.6; padding-left: 20px; }
+  </style>
 </head>
-<body>
-<div id="top-bar">
-  <button id="skip-btn">Skip to next</button>
-  <div id="attempts-indicator"></div>
-  <div id="target-country">Click on: ???</div>   <!-- Center -->
-  <div id="score-box">                           <!-- Right -->
-  <div id="score">
-</div>
-</div>
-</div>
-<p id="feedback"></p>
 
-<div id="map-container">
-<?xml version="1.0" encoding="UTF-8"?>
-<?xml version="1.0" encoding="UTF-8"?>
+<body>
+  <!-- FLASH FEEDBACK -->
+  <div id="flash-feedback"></div>
+
+  <!-- TOP BAR -->
+  <div id="top-bar">
+    <button id="skip-btn">Skip to next</button>
+    <div id="attempts-indicator"></div>
+    <div id="target-country">Click on: ???</div>
+    <div id="score-box">
+      <div id="score"></div>
+    </div>
+  </div>
+
+  <!-- MAP CONTAINER -->
+  <div id="map-container">
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:svg="http://www.w3.org/2000/svg" viewBox="0 0 163 160.4">
   <!-- Generator: Adobe Illustrator 29.5.1, SVG Export Plug-In . SVG Version: 2.1.0 Build 141)  -->
   <defs>
@@ -344,363 +242,329 @@ svg *[country-data] {
     </g>
   </g>
 </svg>
-</div>
-<div id="instructionsBox" style="
-  max-width: auto;
-  margin: 20px auto;
-  padding: 16px 24px;
-  border: 2px solid #000;
-  border-radius: 8px;
-  background-color: #ccc;
-  font-family: Arial, sans-serif;
-  font-size: 12px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-">
-
-  <h2 style="text-align: left; margin-bottom: 12px;">Instructions</h2>
-
-  <ul style="text-align: left; line-height: 1.6; padding-left: 20px;">
-    <li>Click the correct country on the map based on the prompt.</li>
-    <li>You have 3 chances to answer correctly — 3 consecutive wrong answers ends the game.</li>
-    <li>Use the <strong>Skip</strong> button to move on, but beware, attempts carry over.
-
-</li>
-  </ul>
-  <h2 style="text-align: left; margin-bottom: 12px;">Notes</h2>
-  <ul style="text-align: left; line-height: 1.6; padding-left: 20px;">
-    <li>This game includes 25 countries Southwest and Central Asia as recognized by the United Nations, plus 1 politically significant/disputed entity.</li>
-  </ul>
   </div>
-<div id="end-modal" class="modal">
-  <div class="modal-content">
-    <span id="close-modal" class="close">&times;</span>
-    <h2 id="modal-title">Game Over</h2>
-    <p id="modal-message">You missed 3 in a row.</p>
-    <img src="https://media1.tenor.com/m/4tCsEQgbZY4AAAAC/ice-cream-prank.gif" alt="Time Out" style="max-width: 100%; border-radius: 10px;" />
-    <button onclick="resetGame()" class="modal-button">🔁 Play Again</button>
-</div>
-</div>
-    <!-- WIN MODAL (not nested inside the other modal) -->
-<div id="win-modal" class="modal">
-<div class="modal-content">
-    <span id="close-win-modal" class="close">&times;</span>
-    <h2 id="win-modal-title">🎉 You Win!</h2>
-    <p id="win-modal-message">You identified all locations correctly!</p>
-    <img src="https://media1.tenor.com/m/oNaG4ykN_5sAAAAd/gurbanguly-berdimuhamedow.gif" alt="Winner!" style="max-width: 100%; border-radius: 10px;" />
-    <button onclick="resetGame()" class="modal-button">🔁 Play Again</button>
-</div>
-</div>
-</div>
-</div>
-<script>
-(() => {
-  // ========= Config =========
-  const MAX_ATTEMPTS = 3;
-  const MISS_LIMIT = 3;
-  let TOTAL_COUNTRIES = 0;
 
+  <div id="instructionsBox">
+    <h2>Instructions</h2>
+    <ul>
+      <li>Click the correct country on the map based on the prompt.</li>
+      <li>You have 3 chances to answer correctly — 3 consecutive wrong answers ends the game.</li>
+      <li>Use the <strong>Skip</strong> button to move on, but beware, attempts carry over.</li>
+    </ul>
+    <h2>Notes</h2>
+    <ul>
+      <li>This game includes 25 countries of Southwest and Central Asia as recognized by the United Nations, plus 1 politically significant/disputed entity.</li>
+    </ul>
+  </div>
 
-  // ========= State =========
-  const state = {
-    target: "",
-    attempts: 0,
-    score: 0,
-    consecutiveMisses: 0,
-    attempted: new Set(),
-    incorrectThisRound: new Set(),
-  };
+  <!-- GAME OVER MODAL -->
+  <div id="end-modal" class="modal">
+    <div class="modal-content">
+      <span id="close-modal" class="close">&times;</span>
+      <h2 id="modal-title">Game Over</h2>
+      <p id="modal-message">You missed 3 in a row.</p>
+      <img src="https://media1.tenor.com/m/4tCsEQgbZY4AAAAC/ice-cream-prank.gif" alt="Time Out" style="max-width: 100%; border-radius: 10px;" />
+      <button class="modal-button">🔁 Play Again</button>
+    </div>
+  </div>
 
-  // ========= DOM helpers =========
-  const $ = (sel) => document.querySelector(sel);
-  const $$ = (sel) => Array.from(document.querySelectorAll(sel));
+  <!-- WIN MODAL -->
+  <div id="win-modal" class="modal">
+    <div class="modal-content">
+      <span id="close-win-modal" class="close">&times;</span>
+      <h2 id="win-modal-title">🎉 You Win!</h2>
+      <p id="win-modal-message">You identified all locations correctly!</p>
+      <img src="https://media1.tenor.com/m/oNaG4ykN_5sAAAAd/gurbanguly-berdimuhamedow.gif" alt="Winner!" style="max-width: 100%; border-radius: 10px;" />
+      <button class="modal-button">🔁 Play Again</button>
+    </div>
+  </div>
 
-  const els = () => ({
-    targetLabel: $("#target-country"),
-    scoreLabel: $("#score"),
-    attemptsIndicator: $("#attempts-indicator"),
-    flash: $("#flash-feedback"),
-    endModal: $("#end-modal"),
-    winModal: $("#win-modal"),
-    modalTitle: $("#modal-title"),
-    modalMessage: $("#modal-message"),
-    closeEnd: $("#close-modal"),
-    closeWin: $("#close-win-modal"),
-    skipBtn: $("#skip-btn"),
-  });
+  <script>
+  (() => {
+    const MAX_ATTEMPTS = 3;
+    const MISS_LIMIT = 3;
+    let TOTAL_COUNTRIES = 0;
 
-  // ========= UI =========
- function countCountries() {
-  return new Set(
-    Array.from(document.querySelectorAll("svg *[country-data]"))
-      .map(el => el.getAttribute("country-data"))
-      .filter(Boolean)
-  ).size;
-} 
- 
-  function setModal({ title = "", message = "", type = "end" }) {
-    const { endModal, winModal, modalTitle, modalMessage } = els();
+    const state = {
+      target: "",
+      attempts: 0,
+      score: 0,
+      consecutiveMisses: 0,
+      attempted: new Set(),
+      incorrectThisRound: new Set(),
+    };
 
-    // Hide both first
-    endModal.style.display = "none";
-    winModal.style.display = "none";
+    const $ = (sel) => document.querySelector(sel);
+    const $$ = (sel) => Array.from(document.querySelectorAll(sel));
 
-    if (type === "win") {
-      winModal.style.display = "block";
-      return;
-    }
-
-    modalTitle.textContent = title;
-    modalMessage.textContent = message;
-    endModal.style.display = "block";
-  }
-
-  function flash(message, color) {
-    const { flash } = els();
-    if (!flash) return;
-
-    flash.textContent = message;
-    flash.style.backgroundColor = color;
-    flash.style.display = "block";
-    flash.style.opacity = "1";
-
-    clearTimeout(flash._t1);
-    clearTimeout(flash._t2);
-
-    flash._t1 = setTimeout(() => {
-      flash.style.opacity = "0";
-      flash._t2 = setTimeout(() => {
-        flash.style.display = "none";
-      }, 250);
-    }, 350);
-  }
-
-  function updateScore() {
-    const { scoreLabel } = els();
-    scoreLabel.textContent = `Correct: ${state.score} / ${TOTAL_COUNTRIES}`;
-  }
-
-  function updateAttempts() {
-  const indicator = document.getElementById("attempts-indicator");
-  if (!state.target) {
-    indicator.textContent = "";
-    return;
-  }
-
-  const left = MAX_ATTEMPTS - state.attempts;
-
-  if (left >= 3) {
-    indicator.textContent = "🔴🟡🟢";
-  } else if (left === 2) {
-    indicator.textContent = "🔴🟡";
-  } else if (left === 1) {
-    indicator.textContent = "🔴";
-  } else {
-    indicator.textContent = "";
-  }
-}
-
-  function setTargetLabel() {
-    const { targetLabel } = els();
-    targetLabel.textContent = state.target ? `Click on: ${state.target}` : "";
-  }
-
-  // ========= SVG helpers =========
-  function allCountryNames() {
-    const nodes = $$("svg *[country-data]");
-    const names = nodes
-      .map((n) => n.getAttribute("country-data"))
-      .filter((name) => name && name.length > 2);
-
-    return [...new Set(names)];
-  }
-
-  function pickNextTarget() {
-    const names = allCountryNames().filter((n) => !state.attempted.has(n));
-    if (state.score >= TOTAL_COUNTRIES || names.length === 0) return "";
-    return names[Math.floor(Math.random() * names.length)];
-  }
-
-  function markCountry(name, className) {
-    $$(`[country-data='${name}']`).forEach((parent) => {
-      parent.classList.add(className);
-      parent.querySelectorAll("*").forEach((child) => child.classList.add(className));
+    const els = () => ({
+      targetLabel: $("#target-country"),
+      scoreLabel: $("#score"),
+      attemptsIndicator: $("#attempts-indicator"),
+      flash: $("#flash-feedback"),
+      endModal: $("#end-modal"),
+      winModal: $("#win-modal"),
+      modalTitle: $("#modal-title"),
+      modalMessage: $("#modal-message"),
+      closeEnd: $("#close-modal"),
+      closeWin: $("#close-win-modal"),
+      skipBtn: $("#skip-btn"),
     });
-  }
 
-  function clearClassFromAll(className) {
-    $$("." + className).forEach((el) => el.classList.remove(className));
-  }
-
-  function clearIncorrectsThisRound() {
-    state.incorrectThisRound.forEach((name) => {
-      $$(`[country-data='${name}']`).forEach((parent) => {
-        parent.classList.remove("incorrect");
-        parent.querySelectorAll("*").forEach((child) => child.classList.remove("incorrect"));
-      });
-    });
-    state.incorrectThisRound.clear();
-  }
-
-  // ========= Game flow =========
-  function resetGame() {
-	state.target = "";
-    state.attempts = 0;
-    state.score = 0;
-    state.consecutiveMisses = 0;
-    state.attempted.clear();
-    state.incorrectThisRound.clear();
-
-    clearClassFromAll("correct");
-    clearClassFromAll("incorrect");
-
-    setModal({ type: "hide" }); // no-op hide handled below
-    const { endModal, winModal } = els();
-    endModal.style.display = "none";
-    winModal.style.display = "none";
-
-    updateScore();
-    updateAttempts();
-    startRound();
-  }
-
-  function startRound() {
-    clearIncorrectsThisRound();
-
-    state.target = pickNextTarget();
-    state.attempts = 0;
-
-    if (!state.target) {
-      setModal({ type: "win" });
-      return;
+    function countCountries() {
+      return new Set(
+        Array.from(document.querySelectorAll("svg *[country-data]"))
+          .map(el => el.getAttribute("country-data"))
+          .filter(Boolean)
+      ).size;
     }
 
-    setTargetLabel();
-    updateAttempts();
-  }
+    function setModal({ title = "", message = "", type = "end" }) {
+      const { endModal, winModal, modalTitle, modalMessage } = els();
+      endModal.style.display = "none";
+      winModal.style.display = "none";
 
-  function handleCorrect() {
-  const solved = state.target;              // keep current target name
-  markCountry(solved, "correct");
+      if (type === "win") {
+        winModal.style.display = "block";
+        return;
+      }
 
-  state.attempted.add(solved);
-  state.score += 1;
-  state.consecutiveMisses = 0;
-
-  flash("Okay!", "#229954");
-  updateScore();
-
-  // DON'T clear target/attempts UI here.
-  // Just start the next round after the delay.
-  setTimeout(startRound, 900);
-  }
-
-  function handleWrong(clicked) {
-    markCountry(clicked, "incorrect");
-    state.incorrectThisRound.add(clicked);
-
-    state.attempts += 1;
-    state.consecutiveMisses += 1;
-    updateAttempts();
-
-    if (state.consecutiveMisses >= MISS_LIMIT) {
-      setModal({
-        title: "🛑 Game Over",
-        message: `You missed ${MISS_LIMIT} in a row. Final score: ${state.score} / ${TOTAL_COUNTRIES}`,
-        type: "end",
-      });
-      state.target = "";
-      setTargetLabel();
-      return;
+      modalTitle.textContent = title;
+      modalMessage.textContent = message;
+      endModal.style.display = "block";
     }
 
-    if (state.attempts >= MAX_ATTEMPTS) {
-      // Count this target as "attempted" and move on
-      state.attempted.add(state.target);
+    function flash(message, color) {
+      const { flash } = els();
+      if (!flash) return;
+
+      flash.textContent = message;
+      flash.style.backgroundColor = color;
+      flash.style.display = "block";
+      flash.style.opacity = "1";
+
+      clearTimeout(flash._t1);
+      clearTimeout(flash._t2);
+
+      flash._t1 = setTimeout(() => {
+        flash.style.opacity = "0";
+        flash._t2 = setTimeout(() => {
+          flash.style.display = "none";
+        }, 250);
+      }, 350);
+    }
+
+    function updateScore() {
+      const { scoreLabel } = els();
+      scoreLabel.textContent = `Correct: ${state.score} / ${TOTAL_COUNTRIES}`;
+    }
+
+    function updateAttempts() {
+      const indicator = document.getElementById("attempts-indicator");
+      if (!state.target) {
+        indicator.textContent = "";
+        return;
+      }
+      const left = MAX_ATTEMPTS - state.attempts;
+      if (left >= 3) {
+        indicator.textContent = "🔴🟡🟢";
+      } else if (left === 2) {
+        indicator.textContent = "🔴🟡";
+      } else if (left === 1) {
+        indicator.textContent = "🔴";
+      } else {
+        indicator.textContent = "";
+      }
+    }
+
+    function setTargetLabel() {
+      const { targetLabel } = els();
+      targetLabel.textContent = state.target ? `Click on: ${state.target}` : "";
+    }
+
+    function allCountryNames() {
+      const nodes = $$("svg *[country-data]");
+      const names = nodes
+        .map((n) => n.getAttribute("country-data"))
+        .filter((name) => name && name.length > 2);
+      return [...new Set(names)];
+    }
+
+    function pickNextTarget() {
+      const names = allCountryNames().filter((n) => !state.attempted.has(n));
+      if (state.score >= TOTAL_COUNTRIES || names.length === 0) return "";
+      return names[Math.floor(Math.random() * names.length)];
+    }
+
+    function markCountry(name, className) {
+      const escaped = CSS.escape(name);
+      $$(`[country-data="${escaped}"]`).forEach((parent) => {
+        parent.classList.add(className);
+        parent.querySelectorAll("*").forEach((child) => child.classList.add(className));
+      });
+    }
+
+    function clearClassFromAll(className) {
+      $$("." + className).forEach((el) => el.classList.remove(className));
+    }
+
+    function clearIncorrectsThisRound() {
+      state.incorrectThisRound.forEach((name) => {
+        const escaped = CSS.escape(name);
+        $$(`[country-data="${escaped}"]`).forEach((parent) => {
+          parent.classList.remove("incorrect");
+          parent.querySelectorAll("*").forEach((child) => child.classList.remove("incorrect"));
+        });
+      });
+      state.incorrectThisRound.clear();
+    }
+
+    function resetGame() {
       state.target = "";
+      state.attempts = 0;
+      state.score = 0;
+      state.consecutiveMisses = 0;
+      state.attempted.clear();
+      state.incorrectThisRound.clear();
+
+      clearClassFromAll("correct");
+      clearClassFromAll("incorrect");
+
+      const { endModal, winModal } = els();
+      endModal.style.display = "none";
+      winModal.style.display = "none";
+
+      updateScore();
+      updateAttempts();
+      startRound();
+    }
+
+    function startRound() {
+      clearIncorrectsThisRound();
+
+      state.target = pickNextTarget();
+      state.attempts = 0;
+
+      if (!state.target) {
+        setModal({ type: "win" });
+        return;
+      }
+
       setTargetLabel();
+      updateAttempts();
+    }
+
+    function handleCorrect() {
+      const solved = state.target;
+      markCountry(solved, "correct");
+
+      state.attempted.add(solved);
+      state.score += 1;
+      state.consecutiveMisses = 0;
+
+      flash("Okay!", "#229954");
+      updateScore();
+
       setTimeout(startRound, 900);
-      return;
     }
 
-    flash("Wrong!", "#e74c3c");
-  }
+    function handleWrong(clicked) {
+      markCountry(clicked, "incorrect");
+      state.incorrectThisRound.add(clicked);
 
-  // ========= Modal wiring =========
-  function wireModalDismissals() {
-  const { endModal, winModal, closeEnd, closeWin } = els();
-  const restart = () => resetGame();
+      state.attempts += 1;
+      state.consecutiveMisses += 1;
+      updateAttempts();
 
-  // 1) Keep your existing close button wiring
-  closeEnd?.addEventListener("click", restart);
-  closeWin?.addEventListener("click", restart);
+      if (state.consecutiveMisses >= MISS_LIMIT) {
+        setModal({
+          title: "🛑 Game Over",
+          message: `You missed ${MISS_LIMIT} in a row. Final score: ${state.score} / ${TOTAL_COUNTRIES}`,
+          type: "end",
+        });
+        state.target = "";
+        setTargetLabel();
+        return;
+      }
 
-  // 2) ALSO wire any button/link inside either modal that looks like "Play Again"
-  const restartButtons = [
-    ...(endModal ? endModal.querySelectorAll("button, a") : []),
-    ...(winModal ? winModal.querySelectorAll("button, a") : []),
-  ].filter((el) => {
-    const id = (el.id || "").toLowerCase();
-    const txt = (el.textContent || "").trim().toLowerCase();
-    return id.includes("play") || id.includes("again") || txt.includes("play again") || txt.includes("play");
-  });
+      if (state.attempts >= MAX_ATTEMPTS) {
+        state.attempted.add(state.target);
+        state.target = "";
+        setTargetLabel();
+        setTimeout(startRound, 900);
+        return;
+      }
 
-  restartButtons.forEach((btn) => btn.addEventListener("click", restart));
+      flash("Wrong!", "#e74c3c");
+    }
 
-  // 3) Click outside modal content to restart
-  endModal?.addEventListener("click", (e) => {
-    if (e.target === e.currentTarget) restart();
-  });
-  winModal?.addEventListener("click", (e) => {
-    if (e.target === e.currentTarget) restart();
-  });
+    function wireModalDismissals() {
+      const { endModal, winModal, closeEnd, closeWin } = els();
+      const restart = () => resetGame();
 
-  // 4) Escape to restart
-  document.addEventListener("keydown", (e) => {
-    const endShowing = endModal && getComputedStyle(endModal).display !== "none";
-    const winShowing = winModal && getComputedStyle(winModal).display !== "none";
-    if ((endShowing || winShowing) && e.key === "Escape") restart();
-  });
-}
+      closeEnd?.addEventListener("click", restart);
+      closeWin?.addEventListener("click", restart);
 
-  // ========= Input =========
-  function wireGameClicks() {
-    document.addEventListener("click", (e) => {
-      const hit = e.target.closest("[country-data]");
-      if (!hit) return;
-      if (!state.target) return;
+      const restartButtons = [
+        ...(endModal ? endModal.querySelectorAll("button, a") : []),
+        ...(winModal ? winModal.querySelectorAll("button, a") : []),
+      ].filter((el) => {
+        const txt = (el.textContent || "").trim().toLowerCase();
+        return txt.includes("play");
+      });
 
-      const clicked = hit.getAttribute("country-data");
-      if (!clicked) return;
+      restartButtons.forEach((btn) => btn.addEventListener("click", restart));
 
-      // Prevent re-clicking already completed countries or same wrong pick this round
-      if (state.attempted.has(clicked)) return;
-      if (state.incorrectThisRound.has(clicked)) return;
+      endModal?.addEventListener("click", (e) => {
+        if (e.target === e.currentTarget) restart();
+      });
+      winModal?.addEventListener("click", (e) => {
+        if (e.target === e.currentTarget) restart();
+      });
 
-      if (clicked === state.target) handleCorrect();
-      else handleWrong(clicked);
+      document.addEventListener("keydown", (e) => {
+        const endShowing = endModal && getComputedStyle(endModal).display !== "none";
+        const winShowing = winModal && getComputedStyle(winModal).display !== "none";
+        if ((endShowing || winShowing) && e.key === "Escape") restart();
+      });
+    }
+
+    function wireGameClicks() {
+      document.addEventListener("click", (e) => {
+        const hit = e.target.closest("[country-data]");
+        if (!hit) return;
+        if (!state.target) return;
+
+        const clicked = hit.getAttribute("country-data");
+        if (!clicked) return;
+
+        if (state.attempted.has(clicked)) return;
+        if (state.incorrectThisRound.has(clicked)) return;
+
+        if (clicked === state.target) handleCorrect();
+        else handleWrong(clicked);
+      });
+    }
+
+    function wireSkip() {
+      const { skipBtn } = els();
+      skipBtn?.addEventListener("click", () => {
+        if (!state.target) return;
+        state.target = "";
+        setTargetLabel();
+        setTimeout(startRound, 300);
+      });
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      wireModalDismissals();
+      wireGameClicks();
+      wireSkip();
+      TOTAL_COUNTRIES = countCountries();
+      updateScore();
+      startRound();
     });
-  }
- 
-  function wireSkip() {
-    const { skipBtn } = els();
-    skipBtn?.addEventListener("click", () => {
-      if (!state.target) return;
-      state.target = "";
-      setTargetLabel();
-      setTimeout(startRound, 300);
-    });
-  }
-
-  // ========= Init =========
-  document.addEventListener("DOMContentLoaded", () => {
-    wireModalDismissals();
-    wireGameClicks();
-    wireSkip();
-	TOTAL_COUNTRIES = countCountries();
-    updateScore();
-    startRound();
-  });
-})();
-</script>
+  })();
+  </script>
 </body>
 </html>
