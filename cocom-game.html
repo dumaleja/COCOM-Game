@@ -13,12 +13,8 @@
     margin: 0;
   }
 
-  /* Back-to-home link */
+  /* Back-to-home link (inline in controls area) */
   .back-home {
-    position: fixed;
-    top: 12px;
-    left: 16px;
-    z-index: 10000;
     text-decoration: none;
     color: #7a8ba5;
     font-size: 0.85rem;
@@ -28,8 +24,77 @@
     border-radius: 6px;
     background: rgba(13,18,30,0.9);
     transition: color 0.2s, border-color 0.2s;
+    display: inline-block;
+    margin-bottom: 8px;
   }
   .back-home:hover { color: #00b4ff; border-color: rgba(0,180,255,0.4); }
+
+  /* Pre-game instructions modal */
+  #instructions-modal {
+    display: block;
+    position: fixed;
+    z-index: 10001;
+    left: 0; top: 0;
+    width: 100%; height: 100%;
+    background-color: rgba(0,0,0,0.75);
+  }
+  #instructions-modal-content {
+    background-color: #131a2b;
+    margin: 8% auto;
+    padding: 2rem 2.5rem;
+    border-radius: 10px;
+    width: 88%;
+    max-width: 540px;
+    text-align: left;
+    box-shadow: 0 5px 30px rgba(0,0,0,0.6);
+    border: 1px solid rgba(0,180,255,0.2);
+    color: #e0e0e0;
+  }
+  #instructions-modal-content h2 {
+    text-align: center;
+    margin-top: 0;
+    color: #e0e0e0;
+  }
+  #instructions-modal-content ul {
+    line-height: 1.7;
+    padding-left: 20px;
+  }
+  #instructions-modal-content .note {
+    color: #7a8ba5;
+    font-size: 0.85rem;
+    margin-top: 1rem;
+  }
+  .modal-btn-row {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 1.5rem;
+  }
+  .modal-ok-btn {
+    padding: 0.6rem 1.8rem;
+    font-size: 1rem;
+    background-color: #0099ff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+  }
+  .modal-ok-btn:hover { background-color: #007fd3; }
+  .modal-home-btn {
+    padding: 0.6rem 1.5rem;
+    font-size: 1rem;
+    background-color: #2a3a52;
+    color: #c0d0e0;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    font-weight: 600;
+  }
+  .modal-home-btn:hover { background-color: #3a4d6a; color: #e0e0e0; }
 
   h1 { color: #ffffff; }
 
@@ -208,11 +273,31 @@
 </style>
 </head>
 <body>
-<a class="back-home" href="index.html">&#8592; Home</a>
+
+<!-- Pre-game instructions modal -->
+<div id="instructions-modal">
+  <div id="instructions-modal-content">
+    <h2>How to Play</h2>
+    <ul>
+      <li>You have 10 minutes to name as many countries as you can!</li>
+      <li>Press <strong>Enter</strong> after each guess.</li>
+      <li>Click <strong>"I Give Up"</strong> to end early and reveal missed countries.</li>
+      <li>Common abbreviations are accepted (e.g., US/USA/U.S., St./Saint, etc.).</li>
+      <li>Spelling counts — misspelled countries won't be accepted.</li>
+    </ul>
+    <p class="note">Includes all 193 UN member states plus 6 widely recognized or politically significant entities.</p>
+    <div class="modal-btn-row">
+      <button class="modal-ok-btn" id="instructions-ok-btn">Okay — Let's Play!</button>
+      <a class="modal-home-btn" href="index.html">&#8592; Return to Home</a>
+    </div>
+  </div>
+</div>
+
 <div id="mainContainer">
 <div id="mapContainer">
 <!-- New wrapper for alignment -->
 <div id="controls" style="text-align: left; margin-bottom: 10px;">
+<a class="back-home" href="index.html">&#8592; Home</a>
 <h1>Countries by Combatant Command</h1>
 <input id="countryInput" placeholder="Type country name here" type="text"/>
 <button class="button" id="beginButton">Begin</button>
@@ -5031,34 +5116,6 @@
 <button class="button" id="whatamimissingButton">What am I missing?</button>
 <button class="button" id="restartButton">Restart Game</button>
 </div>
-<div id="instructionsBox" style="
-  max-width: 600px;
-  margin: 20px auto;
-  padding: 16px 24px;
-  border: 2px solid #000;
-  border-radius: 8px;
-  background-color: #ccc;
-  font-family: Arial, sans-serif;
-  font-size: 12px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-">
-
-  <h2 style="text-align: left; margin-bottom: 12px;">Instructions</h2>
-
-  <ul style="text-align: left; line-height: 1.6; padding-left: 20px;">
-    <li>You have 10 minutes to name as many countries as you can!</li>
-    <li>Press <strong>Enter</strong> after each guess.</li>
-    <li>Click <strong>“I Give Up”</strong> to end early and reveal missed countries.</li>
-  </ul>
-
-  <h2 style="text-align: left; margin-bottom: 12px;">Notes</h2>
-  <ul style="text-align: left; line-height: 1.6; padding-left: 20px;">
-    <li>Common abbreviations and initialisms are accepted (e.g., US/USA/U.S., St./Saint, etc...).</li>
-    <li>Spelling counts! Misspelled countries won’t be accepted.</li>
-    <li>This game includes all 193 United Nations member states, plus 6 widely recognized or politically significant entities.</li>
-  </ul>
-
-</div>
 </div>
 <div id="tableContainer">
 <div id="commands" style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 1rem;">
@@ -5353,6 +5410,11 @@ window.addEventListener("DOMContentLoaded", () => {
   document.getElementById("countryInput").disabled = true;
   document.getElementById("countryInput").placeholder = "Click 'Begin' to start";
   document.getElementById("timeLeft").textContent = "10:00";
+
+  // Wire instructions modal
+  document.getElementById("instructions-ok-btn").addEventListener("click", () => {
+    document.getElementById("instructions-modal").style.display = "none";
+  });
 });
 
 
