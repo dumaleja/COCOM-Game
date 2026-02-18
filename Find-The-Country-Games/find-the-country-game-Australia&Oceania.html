@@ -12,24 +12,85 @@
       margin: 0;
     }
 
-    .back-home {
+
+    /* Pre-game instructions modal */
+    #instructions-modal {
+      display: block;
       position: fixed;
-      top: 12px;
-      left: 16px;
       z-index: 10001;
-      text-decoration: none;
+      left: 0; top: 0;
+      width: 100%; height: 100%;
+      background-color: rgba(0,0,0,0.75);
+    }
+    #instructions-modal-content {
+      background-color: #131a2b;
+      margin: 8% auto;
+      padding: 2rem 2.5rem;
+      border-radius: 10px;
+      width: 88%;
+      max-width: 540px;
+      text-align: left;
+      box-shadow: 0 5px 30px rgba(0,0,0,0.6);
+      border: 1px solid rgba(0,180,255,0.2);
+      color: #e0e0e0;
+    }
+    #instructions-modal-content h2 {
+      text-align: center;
+      margin-top: 0;
+      color: #e0e0e0;
+    }
+    #instructions-modal-content ul {
+      line-height: 1.7;
+      padding-left: 20px;
+    }
+    #instructions-modal-content .note {
       color: #7a8ba5;
       font-size: 0.85rem;
-      font-weight: 600;
-      padding: 6px 14px;
-      border: 1px solid rgba(0,180,255,0.15);
+      margin-top: 1rem;
+    }
+    .modal-btn-row {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      margin-top: 1.5rem;
+    }
+    .modal-ok-btn {
+      padding: 0.6rem 1.8rem;
+      font-size: 1rem;
+      background-color: #0099ff;
+      color: white;
+      border: none;
       border-radius: 6px;
-      background: rgba(13,18,30,0.9);
-      transition: color 0.2s, border-color 0.2s;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    .modal-ok-btn:hover { background-color: #007fd3; }
+    .modal-home-btn {
+      padding: 0.6rem 1.5rem;
+      font-size: 1rem;
+      background-color: #2a3a52;
+      color: #c0d0e0;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      font-weight: 600;
+    }
+    .modal-home-btn:hover { background-color: #3a4d6a; color: #e0e0e0; }
+
+    /* Back home link (in top bar) */
+    .back-home {
+      text-decoration: none; color: #7a8ba5; font-size: 0.85rem; font-weight: 600;
+      padding: 6px 14px; border: 1px solid rgba(0,180,255,0.15); border-radius: 6px;
+      background: rgba(13,18,30,0.9); transition: color 0.2s, border-color 0.2s;
+      white-space: nowrap;
     }
     .back-home:hover { color: #00b4ff; border-color: rgba(0,180,255,0.4); }
 
-    #map-container { width: 100%; height: auto; }
+    #map-container { width: 100%; height: calc(100vh - 80px); overflow: hidden; }
+    #map-container svg { display: block; width: 100%; height: 100%; }
 
     svg *[country-data] { cursor: pointer; }
 
@@ -101,20 +162,10 @@
     }
     .modal-button:hover { background-color: #007fd3; }
 
-    #instructionsBox {
-      max-width: 600px; margin: 20px auto; padding: 16px 24px;
-      border: 1px solid #2a3a52; border-radius: 8px; background-color: #131a2b;
-      font-family: 'Segoe UI', Arial, sans-serif; font-size: 12px;
-      color: #a0b0c0;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-    }
-    #instructionsBox h2 { text-align: left; margin-bottom: 12px; }
-    #instructionsBox ul { text-align: left; line-height: 1.6; padding-left: 20px; }
   </style>
 </head>
 
 <body>
-  <a class="back-home" href="../index.html">&#8592; Home</a>
   <!-- FLASH FEEDBACK -->
   <div id="flash-feedback"></div>
 
@@ -126,6 +177,7 @@
     <div id="score-box">
       <div id="score"></div>
     </div>
+    <a class="back-home" href="../index.html">&#8592; Home</a>
   </div>
 
   <!-- MAP CONTAINER -->
@@ -134,7 +186,7 @@
 
 <style>
       .st0, .st2 {
-        stroke: #0a0e17;
+        stroke: #5a7a9a;
       }
 
       .st0, .st2 {
@@ -655,17 +707,22 @@
 </svg>
   </div>
 
-  <div id="instructionsBox">
-    <h2>Instructions</h2>
-    <ul>
-      <li>Click the correct country on the map based on the prompt.</li>
-      <li>You have 3 chances to answer correctly — 3 consecutive wrong answers ends the game.</li>
-      <li>Use the <strong>Skip</strong> button to move on, but beware, attempts carry over.</li>
-    </ul>
-    <h2>Notes</h2>
-    <ul>
-      <li>This game includes all countries and territories of Australia and Oceania as recognized by the United Nations, plus 2 politically significant/disputed territories.</li>
-    </ul>
+
+  <!-- INSTRUCTIONS MODAL -->
+  <div id="instructions-modal">
+    <div id="instructions-modal-content">
+      <h2>How to Play</h2>
+      <ul>
+        <li>Click the correct country on the map based on the prompt.</li>
+        <li>You have 3 chances to answer correctly — 3 consecutive wrong answers ends the game.</li>
+        <li>Use the <strong>Skip</strong> button to move on, but beware, attempts carry over.</li>
+      </ul>
+      <p class="note">This game includes all countries and territories of Australia and Oceania as recognized by the United Nations, plus 2 politically significant/disputed territories.</p>
+      <div class="modal-btn-row">
+        <button class="modal-ok-btn" id="instructions-ok-btn">Okay — Let's Play!</button>
+        <a class="modal-home-btn" href="../index.html">&#8592; Return to Home</a>
+      </div>
+    </div>
   </div>
 
   <!-- GAME OVER MODAL -->
@@ -973,7 +1030,11 @@
       wireSkip();
       TOTAL_COUNTRIES = countCountries();
       updateScore();
-      startRound();
+      // Show instructions modal; game starts when user clicks OK
+      document.getElementById("instructions-ok-btn").addEventListener("click", () => {
+        document.getElementById("instructions-modal").style.display = "none";
+        startRound();
+      });
     });
   })();
   </script>
