@@ -65,12 +65,13 @@
     }
 
     /* Country fill states via JS-toggled classes */
+    /* !important overrides the SVG-internal .st0/.st1 etc. class fills */
     #map-svg [country-data] path,
     #map-svg [country-data] circle {
-      fill: #1a2535;
-      stroke: #3a5a7a;
+      fill: transparent !important;
+      stroke: transparent !important;
       stroke-width: 0.4px;
-      transition: fill 0.35s ease;
+      transition: fill 0.35s ease, stroke 0.35s ease;
     }
 
     /* Placed correctly */
@@ -99,7 +100,7 @@
 
     /* Flash red on wrong drop */
     @keyframes wrongFlash {
-      0%,100% { fill: #1a2535; }
+      0%,100% { fill: transparent; }
       40%      { fill: #7a1a1a; }
     }
     #map-svg [country-data].wrong-flash path,
@@ -1322,7 +1323,7 @@
         state.remaining.add(name);
       }
     });
-    state.total = state.remaining.size + 1; // +1 for start country
+    state.total = state.remaining.size; // start country is already in remaining at this point
 
     // Place starting country
     state.remaining.delete(startCountry);
@@ -1340,10 +1341,14 @@
     renderBordersHint(state.current);
   }
 
+  // Countries with no real land borders — excluded as starting choices
+  // because they'd appear as an isolated dot with no geographic context.
+  const NO_LAND_BORDER = new Set(["Iceland", "Malta"]);
+
   // ── Start modal setup ─────────────────────────────────────────────
   function populateStartSelect() {
     const names = getAllCountryNames()
-      .filter(n => BORDERS.hasOwnProperty(n))
+      .filter(n => BORDERS.hasOwnProperty(n) && !NO_LAND_BORDER.has(n))
       .sort();
     names.forEach(name => {
       const opt = document.createElement("option");
