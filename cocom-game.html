@@ -5449,7 +5449,7 @@ window.addEventListener("DOMContentLoaded", () => {
   document.getElementById("mapContainer").classList.add("grayed");
   document.getElementById("countryInput").disabled = true;
   document.getElementById("countryInput").placeholder = "Click 'Begin' to start";
-  document.getElementById("timeLeft").textContent = "10:00";
+  document.getElementById("timeLeft").textContent = "15:00";
 
   // Wire instructions modal
   document.getElementById("instructions-ok-btn").addEventListener("click", () => {
@@ -5637,8 +5637,8 @@ document.getElementById("beginButton").addEventListener("click", () => {
   input.placeholder = "Type country name here";
 
   // Start timer anchored to wall-clock time
-  timeRemaining = 600;
-  endTime = Date.now() + 600 * 1000;
+  timeRemaining = 900;
+  endTime = Date.now() + 900 * 1000;
   updateTimerDisplay();
   countdown = setInterval(() => {
     updateTimerDisplay();
