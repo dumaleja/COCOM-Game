@@ -14,7 +14,7 @@
 //     }
 // ============================================================
 const FIREBASE_CONFIG = {
-  apiKey:            "AIzaSyAr5MMHUOtStXD6xkcZorwAkqQ9AfYmg4g",
+  apiKey:            "AIzaSyB42Iv-NQh1sdEgXr4R0v7hWZegCDq-Big",
   authDomain:        "geo412-games.firebaseapp.com",
   databaseURL:       "https://geo412-games-default-rtdb.firebaseio.com",
   projectId:         "geo412-games",
