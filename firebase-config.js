@@ -16,7 +16,7 @@
 const FIREBASE_CONFIG = {
   apiKey:            "AIzaSyAr5MMHUOtStXD6xkcZorwAkqQ9AfYmg4g",
   authDomain:        "geo412-games.firebaseapp.com",
-  databaseURL:       "https://YOUR_PROJECT_ID-default-rtdb.firebaseio.com",
+  databaseURL:       "https://geo412-games-default-rtdb.firebaseio.com",
   projectId:         "geo412-games",
   storageBucket:     "geo412-games.firebasestorage.app",
   messagingSenderId: "414961619458",
