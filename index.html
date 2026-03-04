@@ -385,13 +385,17 @@
 
 </div>
 
+<!-- Firebase SDK (compat) + shared config/reference -->
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+<script src="firebase-config.js"></script>
+
 <script>
 (function () {
-  const LEADERBOARD_KEY = 'cocom_leaderboard';
-
-  function getLeaderboard() {
-    try { return JSON.parse(localStorage.getItem(LEADERBOARD_KEY)) || []; }
-    catch (e) { return []; }
+  function esc(str) {
+    return String(str || '')
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
   }
 
   function formatTime(secs) {
@@ -400,12 +404,11 @@
     return m + ':' + String(s).padStart(2, '0');
   }
 
-  function renderLeaderboard() {
-    const board = getLeaderboard();
+  function renderLeaderboard(entries) {
     const content = document.getElementById('leaderboard-content');
     const empty   = document.getElementById('leaderboard-empty');
 
-    if (!board.length) {
+    if (!entries.length) {
       content.innerHTML = '';
       empty.style.display = 'block';
       return;
@@ -415,46 +418,35 @@
     const rankIcons = ['🥇', '🥈', '🥉', '4', '5'];
 
     let html = `<div class="lb-header-row">
-      <span></span>
-      <span>Name</span>
-      <span></span>
-      <span>Time</span>
-      <span style="text-align:right">Date</span>
+      <span></span><span>Name</span><span></span>
+      <span>Time</span><span style="text-align:right">Date</span>
     </div>`;
 
-    board.forEach((entry, i) => {
+    entries.forEach(function(entry, i) {
       const rank = i + 1;
-      const icon = rankIcons[i] || String(rank);
       html += `<div class="lb-row">
-        <span class="lb-rank">${icon}</span>
-        <span class="lb-name">${entry.name}</span>
+        <span class="lb-rank">${rankIcons[i] || rank}</span>
+        <span class="lb-name">${esc(entry.name)}</span>
         <span></span>
         <span class="lb-time">${formatTime(entry.time)}</span>
-        <span class="lb-date">${entry.date || ''}</span>`;
-
+        <span class="lb-date">${esc(entry.date)}</span>
+      </div>`;
       if (rank <= 3 && entry.message) {
-        html += `</div><div class="lb-row" style="padding-top:0; border-bottom: 1px solid rgba(255,255,255,0.03);">
+        html += `<div class="lb-row" style="padding-top:0;border-bottom:1px solid rgba(255,255,255,0.03);">
           <span></span>
-          <span class="lb-message-row" style="grid-column:2/-1">&ldquo;${entry.message}&rdquo;</span>`;
+          <span class="lb-message-row" style="grid-column:2/-1">&ldquo;${esc(entry.message)}&rdquo;</span>
+        </div>`;
       }
-
-      html += `</div>`;
     });
 
     content.innerHTML = html;
   }
 
-  // Initial render
-  renderLeaderboard();
-
-  // Live update when another tab saves a score
-  window.addEventListener('storage', function (e) {
-    if (e.key === LEADERBOARD_KEY) renderLeaderboard();
-  });
-
-  // Re-render when user returns to this tab
-  document.addEventListener('visibilitychange', function () {
-    if (!document.hidden) renderLeaderboard();
+  // Real-time listener — pushes updates to every open browser instantly
+  lbRef.orderByChild('time').limitToFirst(5).on('value', function(snapshot) {
+    var entries = [];
+    snapshot.forEach(function(child) { entries.push(child.val()); });
+    renderLeaderboard(entries);
   });
 })();
 </script>
