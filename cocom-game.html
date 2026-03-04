@@ -5183,17 +5183,46 @@
   transform: translate(-50%, -50%);
   background-color: #131a2b;
   border: 2px solid rgba(0,180,255,0.3);
-  padding: 20px;
+  padding: 24px;
   border-radius: 12px;
   box-shadow: 0 0 30px rgba(0, 120, 255, 0.2);
   text-align:center;
   color: #e0e0e0;
+  min-width: 320px;
+  max-width: 460px;
+  width: 90vw;
+  max-height: 90vh;
+  overflow-y: auto;
 ">
 <h2>🎉 You did it! 🎉</h2>
 <img alt="Victory Celebration" src="https://media1.tenor.com/m/Lpp5fg42OywAAAAC/nod-yes.gif" style="max-width: 100%; border-radius: 10px;"/>
 <br/><br/>
 <p id="completionTimeText" style="font-size: 18px; margin: 12px 0; font-weight: bold;"></p>
-<br/><br/>
+
+<!-- Leaderboard Entry Section -->
+<div id="leaderboard-entry-section" style="display:none; margin-top:14px; padding:16px; background:rgba(0,180,255,0.05); border:1px solid rgba(0,180,255,0.2); border-radius:8px; text-align:left;">
+  <p id="leaderboard-rank-text" style="color:#00b4ff; font-weight:bold; margin-bottom:12px; font-size:15px; text-align:center;"></p>
+  <!-- Arcade Name Entry -->
+  <div style="text-align:center; margin-bottom:12px;">
+    <label style="display:block; font-size:11px; color:#7a8ba5; margin-bottom:6px; text-transform:uppercase; letter-spacing:0.12em;">Enter Your Initials</label>
+    <input id="arcade-name-input" type="text" maxlength="3" placeholder="AAA"
+      oninput="this.value=this.value.toUpperCase().replace(/[^A-Z0-9]/g,'')"
+      style="width:90px; text-align:center; font-size:26px; font-weight:bold; letter-spacing:0.3em; background:#0a0e17; color:#00ff88; border:2px solid #00ff88; border-radius:6px; padding:8px 4px; font-family:'Courier New',monospace; outline:none;"/>
+  </div>
+  <!-- Message Entry (top 3 only) -->
+  <div id="leaderboard-message-section" style="display:none; margin-bottom:12px;">
+    <label style="display:block; font-size:11px; color:#ffd700; margin-bottom:6px; text-transform:uppercase; letter-spacing:0.12em;">🏆 Top 3 Bonus — Leave a Message</label>
+    <textarea id="arcade-message-input" maxlength="120" placeholder="Leave your mark for all to see..."
+      oninput="document.getElementById('msg-char-count').textContent=this.value.length"
+      style="width:100%; background:#0a0e17; color:#e0e0e0; border:1px solid rgba(0,180,255,0.3); border-radius:6px; padding:8px; font-size:13px; resize:none; height:58px; font-family:'Segoe UI',Arial,sans-serif; outline:none; box-sizing:border-box;"></textarea>
+    <div style="text-align:right; font-size:11px; color:#7a8ba5; margin-top:2px;"><span id="msg-char-count">0</span>/120</div>
+  </div>
+  <div style="text-align:center;">
+    <button onclick="submitLeaderboardScore()" style="padding:8px 22px; font-size:14px; font-weight:bold; background:#00b4ff; color:#0a0e17; border:none; border-radius:6px; cursor:pointer;">Save Score</button>
+  </div>
+</div>
+
+<br/>
 <button onclick="location.reload()" style="
     padding: 8px 16px;
     font-size: 14px;
@@ -5203,6 +5232,7 @@
     border: none;
     border-radius: 6px;
     cursor: pointer;
+    margin: 4px;
   ">Go Again!</button>
 <button onclick="closevictoryModal()" style="
     padding: 8px 16px;
@@ -5213,6 +5243,7 @@
     border: none;
     border-radius: 6px;
     cursor: pointer;
+    margin: 4px;
   ">Review Your Answers</button>
 </div>
 <!-- Timeout Modal -->
@@ -5645,16 +5676,84 @@ document.getElementById("restartButton").addEventListener("click", () => {
   location.reload(); // refreshes the page and resets everything
 });
 
+// ===== LEADERBOARD (localStorage) =====
+const LEADERBOARD_KEY = 'cocom_leaderboard';
+
+function getLeaderboard() {
+  try { return JSON.parse(localStorage.getItem(LEADERBOARD_KEY)) || []; }
+  catch (e) { return []; }
+}
+
+function saveLeaderboard(entries) {
+  localStorage.setItem(LEADERBOARD_KEY, JSON.stringify(entries));
+}
+
+function getLeaderboardRank(timeSeconds) {
+  const board = getLeaderboard();
+  const fasterCount = board.filter(e => e.time < timeSeconds).length;
+  const rank = fasterCount + 1;
+  return (rank <= 5) ? rank : -1;
+}
+
+function submitLeaderboardScore() {
+  const nameInput = document.getElementById('arcade-name-input');
+  const msgInput = document.getElementById('arcade-message-input');
+  const section = document.getElementById('leaderboard-entry-section');
+
+  let name = (nameInput.value || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
+  if (!name) name = '???';
+  while (name.length < 3) name += '_';
+  name = name.substring(0, 3);
+
+  const elapsedSeconds = parseInt(section.dataset.elapsedSeconds) || 0;
+  const msgRaw = (msgInput ? msgInput.value : '').substring(0, 120).trim();
+
+  const board = getLeaderboard();
+  board.push({
+    name: name,
+    time: elapsedSeconds,
+    message: msgRaw,
+    date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+  });
+  board.sort((a, b) => a.time - b.time);
+  saveLeaderboard(board.slice(0, 5));
+
+  section.innerHTML = '<p style="color:#00dc82; font-weight:bold; font-size:15px; text-align:center;">✓ Score saved to leaderboard!</p>';
+}
+
 //Mr. Miyagi Win!//
 function showVictoryModal() {
-const elapsedSeconds = 600 - timeRemaining;
-const minutes = Math.floor(elapsedSeconds / 60);
-const seconds = elapsedSeconds % 60;
+  const elapsedSeconds = 600 - timeRemaining;
+  const minutes = Math.floor(elapsedSeconds / 60);
+  const seconds = elapsedSeconds % 60;
 
-document.getElementById("completionTimeText").innerHTML = 
-  `You completed it in <strong>${minutes}:${seconds.toString().padStart(2, '0')}</strong>.`;
+  document.getElementById("completionTimeText").innerHTML =
+    `You completed it in <strong>${minutes}:${seconds.toString().padStart(2, '0')}</strong>.`;
 
-document.getElementById("victoryModal").style.display = "block";
+  const rank = getLeaderboardRank(elapsedSeconds);
+  const leaderSection = document.getElementById('leaderboard-entry-section');
+
+  if (rank >= 1) {
+    leaderSection.style.display = 'block';
+    leaderSection.dataset.elapsedSeconds = elapsedSeconds;
+
+    const medals = ['🥇', '🥈', '🥉', '4th', '5th'];
+    document.getElementById('leaderboard-rank-text').textContent =
+      `${medals[rank - 1]} You ranked #${rank} on the leaderboard!`;
+
+    document.getElementById('leaderboard-message-section').style.display =
+      rank <= 3 ? 'block' : 'none';
+
+    document.getElementById('arcade-name-input').value = '';
+    const msgEl = document.getElementById('arcade-message-input');
+    if (msgEl) { msgEl.value = ''; }
+    const countEl = document.getElementById('msg-char-count');
+    if (countEl) { countEl.textContent = '0'; }
+  } else {
+    leaderSection.style.display = 'none';
+  }
+
+  document.getElementById("victoryModal").style.display = "block";
 }
 
 function showTimeoutModal() {
