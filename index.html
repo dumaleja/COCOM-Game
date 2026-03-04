@@ -169,6 +169,97 @@
   .tag-type    { background: rgba(0, 180, 255, 0.12); color: #00b4ff; }
   .tag-click   { background: rgba(0, 220, 130, 0.12); color: #00dc82; }
 
+  /* ===== LEADERBOARD ===== */
+  .leaderboard-card {
+    background: linear-gradient(145deg, #131a2b, #0f1521);
+    border: 1px solid rgba(0, 180, 255, 0.15);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 48px;
+  }
+
+  .lb-header-row {
+    display: grid;
+    grid-template-columns: 44px 70px 1fr 80px 100px;
+    gap: 10px;
+    padding: 0 0 10px 0;
+    border-bottom: 1px solid rgba(0,180,255,0.15);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #4a6a8a;
+    font-weight: 600;
+  }
+
+  .lb-row {
+    display: grid;
+    grid-template-columns: 44px 70px 1fr 80px 100px;
+    gap: 10px;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+  }
+
+  .lb-row:last-child { border-bottom: none; }
+
+  .lb-rank {
+    font-size: 1.3rem;
+    text-align: center;
+  }
+
+  .lb-name {
+    font-family: 'Courier New', monospace;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #00ff88;
+    letter-spacing: 0.15em;
+  }
+
+  .lb-message-row {
+    grid-column: 2 / -1;
+    font-size: 0.8rem;
+    color: #7a8ba5;
+    font-style: italic;
+    padding: 2px 0 6px 0;
+    line-height: 1.4;
+  }
+
+  .lb-time {
+    font-family: 'Courier New', monospace;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #00b4ff;
+  }
+
+  .lb-date {
+    font-size: 0.75rem;
+    color: #4a6a8a;
+    text-align: right;
+  }
+
+  #leaderboard-empty {
+    color: #4a6a8a;
+    font-size: 0.9rem;
+    text-align: center;
+    padding: 24px 0 8px;
+  }
+
+  .lb-live-dot {
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    background: #00dc82;
+    border-radius: 50%;
+    margin-right: 6px;
+    animation: lbPulse 2s ease-in-out infinite;
+    vertical-align: middle;
+  }
+
+  @keyframes lbPulse {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0.3; }
+  }
+
   /* ===== FOOTER ===== */
   footer {
     text-align: center;
@@ -183,6 +274,11 @@
     header h1 { font-size: 2rem; }
     .card-grid { grid-template-columns: 1fr; }
     .page-wrapper { padding: 36px 16px 48px; }
+    .lb-header-row, .lb-row {
+      grid-template-columns: 36px 60px 1fr 70px 86px;
+      gap: 6px;
+    }
+    .lb-name { font-size: 1rem; }
   }
 </style>
 </head>
@@ -205,6 +301,15 @@
       <div class="card-desc">Type country names to assign them to the correct U.S. Combatant Command. 199 countries, 10-minute timer.</div>
       <div class="card-tag tag-click">Click to Play!</div>
     </a>
+  </div>
+
+  <!-- ===== LEADERBOARD ===== -->
+  <div class="section-title">
+    <span class="lb-live-dot"></span>Leaderboard &mdash; Countries by Combatant Command
+  </div>
+  <div class="leaderboard-card">
+    <div id="leaderboard-content"></div>
+    <p id="leaderboard-empty">No scores yet &mdash; be the first to finish the challenge!</p>
   </div>
 
   <!-- ===== PUZZLE GAMES ===== -->
@@ -279,6 +384,80 @@
   <footer>GeoGames &mdash; A geography study tool</footer>
 
 </div>
+
+<script>
+(function () {
+  const LEADERBOARD_KEY = 'cocom_leaderboard';
+
+  function getLeaderboard() {
+    try { return JSON.parse(localStorage.getItem(LEADERBOARD_KEY)) || []; }
+    catch (e) { return []; }
+  }
+
+  function formatTime(secs) {
+    const m = Math.floor(secs / 60);
+    const s = secs % 60;
+    return m + ':' + String(s).padStart(2, '0');
+  }
+
+  function renderLeaderboard() {
+    const board = getLeaderboard();
+    const content = document.getElementById('leaderboard-content');
+    const empty   = document.getElementById('leaderboard-empty');
+
+    if (!board.length) {
+      content.innerHTML = '';
+      empty.style.display = 'block';
+      return;
+    }
+
+    empty.style.display = 'none';
+    const rankIcons = ['🥇', '🥈', '🥉', '4', '5'];
+
+    let html = `<div class="lb-header-row">
+      <span></span>
+      <span>Name</span>
+      <span></span>
+      <span>Time</span>
+      <span style="text-align:right">Date</span>
+    </div>`;
+
+    board.forEach((entry, i) => {
+      const rank = i + 1;
+      const icon = rankIcons[i] || String(rank);
+      html += `<div class="lb-row">
+        <span class="lb-rank">${icon}</span>
+        <span class="lb-name">${entry.name}</span>
+        <span></span>
+        <span class="lb-time">${formatTime(entry.time)}</span>
+        <span class="lb-date">${entry.date || ''}</span>`;
+
+      if (rank <= 3 && entry.message) {
+        html += `</div><div class="lb-row" style="padding-top:0; border-bottom: 1px solid rgba(255,255,255,0.03);">
+          <span></span>
+          <span class="lb-message-row" style="grid-column:2/-1">&ldquo;${entry.message}&rdquo;</span>`;
+      }
+
+      html += `</div>`;
+    });
+
+    content.innerHTML = html;
+  }
+
+  // Initial render
+  renderLeaderboard();
+
+  // Live update when another tab saves a score
+  window.addEventListener('storage', function (e) {
+    if (e.key === LEADERBOARD_KEY) renderLeaderboard();
+  });
+
+  // Re-render when user returns to this tab
+  document.addEventListener('visibilitychange', function () {
+    if (!document.hidden) renderLeaderboard();
+  });
+})();
+</script>
 
 </body>
 </html>
