@@ -5583,6 +5583,8 @@ input.addEventListener("keyup", function (e) {
 let countdown; // declared globally to access in restart/giveUp
 let timeRemaining; // declared globally for timer tracking
 let endTime; // wall-clock anchor for accurate countdown
+let startTime; // wall-clock time when Begin was clicked
+let victoryElapsedSeconds; // elapsed seconds at win — stored in JS, not DOM
 
 function updateTimerDisplay() {
   timeRemaining = Math.max(0, Math.ceil((endTime - Date.now()) / 1000));
@@ -5637,8 +5639,9 @@ document.getElementById("beginButton").addEventListener("click", () => {
   input.placeholder = "Type country name here";
 
   // Start timer anchored to wall-clock time
+  startTime = Date.now();
   timeRemaining = 900;
-  endTime = Date.now() + 900 * 1000;
+  endTime = startTime + 900 * 1000;
   updateTimerDisplay();
   countdown = setInterval(() => {
     updateTimerDisplay();
@@ -5660,7 +5663,8 @@ document.getElementById("restartButton").addEventListener("click", () => {
 
 //Mr. Miyagi Win!//
 function showVictoryModal() {
-  const elapsedSeconds = 900 - timeRemaining;
+  const elapsedSeconds = Math.max(1, Math.round((Date.now() - startTime) / 1000));
+  victoryElapsedSeconds = elapsedSeconds;
   const minutes = Math.floor(elapsedSeconds / 60);
   const seconds = elapsedSeconds % 60;
 
@@ -5691,7 +5695,6 @@ function showVictoryModal() {
          </div>`
       : '';
 
-    section.dataset.elapsedSeconds = elapsedSeconds;
     section.innerHTML = `
       <div style="padding:16px;background:rgba(0,180,255,0.05);border:1px solid rgba(0,180,255,0.2);border-radius:8px;text-align:left;">
         <p style="color:#00b4ff;font-weight:bold;margin-bottom:12px;font-size:15px;text-align:center;">${medals[rank - 1]} You ranked #${rank} on the leaderboard!</p>
@@ -5722,7 +5725,8 @@ function submitLeaderboardScore() {
   while (name.length < 3) name += '_';
   name = name.substring(0, 3);
 
-  const elapsedSeconds = parseInt(section.dataset.elapsedSeconds) || 0;
+  const elapsedSeconds = victoryElapsedSeconds;
+  if (!elapsedSeconds || elapsedSeconds < 1) return;
   const msgRaw = (msgInput ? msgInput.value.substring(0, 120).trim() : '');
 
   const entry = {
