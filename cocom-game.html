@@ -5727,7 +5727,10 @@ function submitLeaderboardScore() {
 
   const elapsedSeconds = victoryElapsedSeconds;
   if (!elapsedSeconds || elapsedSeconds < 1) return;
-  const msgRaw = (msgInput ? msgInput.value.substring(0, 120).trim() : '');
+  // Strip any HTML tags from the message before storing (prevents stored XSS).
+  const _msgNode = document.createElement('div');
+  _msgNode.textContent = (msgInput ? msgInput.value.substring(0, 120).trim() : '');
+  const msgRaw = _msgNode.textContent;
 
   const entry = {
     name: name,
@@ -5789,6 +5792,7 @@ document.getElementById("giveUpButton").addEventListener("click", () => {
 <!-- Firebase SDK (compat) + shared config/reference -->
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
 <script src="firebase-config.js"></script>
 </body>
 </html>
